@@ -16,16 +16,17 @@
   <meta name="author" content="Sivan Zhang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="代码具体分为两部分1.KeyHook 动态链接库2.HookMain    主程序入口 1.KeyHook 动态链接库DllMain.cppSource.def 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263">
+    <meta name="description" content="代码具体分为两部分1.KeyHook 动态链接库2.HookMain    主程序入口">
 <meta property="og:type" content="article">
 <meta property="og:title" content="键盘过滤">
 <meta property="og:url" content="https://wlpswmt.github.io/2023/02/26/%E9%94%AE%E7%9B%98%E8%BF%87%E6%BB%A4/index.html">
 <meta property="og:site_name" content="Silent">
-<meta property="og:description" content="代码具体分为两部分1.KeyHook 动态链接库2.HookMain    主程序入口 1.KeyHook 动态链接库DllMain.cppSource.def 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263">
+<meta property="og:description" content="代码具体分为两部分1.KeyHook 动态链接库2.HookMain    主程序入口">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-02-26T09:30:50.000Z">
-<meta property="article:modified_time" content="2023-02-26T09:36:45.405Z">
+<meta property="article:modified_time" content="2023-02-26T10:33:29.790Z">
 <meta property="article:author" content="Sivan Zhang">
+<meta property="article:tag" content="HOOK">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -306,7 +307,7 @@
               <p class="note note-primary">
                 
                   
-                    本文最后更新于：5 分钟前
+                    本文最后更新于：21 分钟前
                   
                 
               </p>
@@ -314,9 +315,9 @@
             
               <div class="markdown-body">
                 
-                <span id="more"></span>
+                <p>代码具体分为两部分<br>1.KeyHook 动态链接库<br>2.HookMain    主程序入口</p>
+<span id="more"></span>
 
-<p>代码具体分为两部分<br>1.KeyHook 动态链接库<br>2.HookMain    主程序入口</p>
 <p>1.KeyHook 动态链接库<br>DllMain.cpp<br>Source.def</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//DllMain.cpp   </span><br>   <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br>   <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;tchar.h&gt;</span></span><br>   <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;Windows.h&gt;</span></span><br>   <span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br>   HINSTANCE __ModuleHandle = <span class="hljs-literal">NULL</span>;  <span class="hljs-comment">//模块句柄（基地址）</span><br>   HHOOK  __HookModule = <span class="hljs-literal">NULL</span>;       <span class="hljs-comment">//钩子句柄（基地址）</span><br>   <span class="hljs-function">LRESULT CALLBACK <span class="hljs-title">MessageProcedure</span><span class="hljs-params">(<span class="hljs-type">int</span> Message, WPARAM wParam, LPARAM lParam)</span></span><br><span class="hljs-function"><span class="hljs-comment">//DllMain 的规范写法 注意程序位数 钩子程序位数需要和所需钩的程序或系统的位数相匹配</span></span><br><span class="hljs-function">BOOL WINAPI <span class="hljs-title">DllMain</span><span class="hljs-params">(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-keyword">switch</span> (ul_reason_for_call)<br>	&#123;<br>	<span class="hljs-keyword">case</span> DLL_PROCESS_ATTACH:<br>	&#123;<br>		__ModuleHandle = hinstDLL;<br>		<span class="hljs-keyword">break</span>;<br>	&#125;<br>	<span class="hljs-keyword">case</span> DLL_THREAD_ATTACH:<br>	<span class="hljs-keyword">case</span> DLL_THREAD_DETACH:<br>	<span class="hljs-keyword">case</span> DLL_PROCESS_DETACH:<br>		<span class="hljs-keyword">break</span>;<br>	&#125;<br>	<span class="hljs-keyword">return</span> TRUE;<br>&#125;<br><span class="hljs-comment">//IDA Export 中发现的导出函数 HookStart</span><br><span class="hljs-function">HHOOK <span class="hljs-title">SetWindowsHookEx</span><span class="hljs-params">(      </span></span><br><span class="hljs-params"><span class="hljs-function">		 <span class="hljs-type">int</span> idHook,      <span class="hljs-comment">//消息ID</span></span></span><br><span class="hljs-params"><span class="hljs-function">    HOOKPROC lpfn,   <span class="hljs-comment">//回调函数</span></span></span><br><span class="hljs-params"><span class="hljs-function">    HINSTANCE hMod,  <span class="hljs-comment">//模块句柄</span></span></span><br><span class="hljs-params"><span class="hljs-function">    DWORD dwThreadId <span class="hljs-comment">//线程ID 一般为0</span></span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span>;<br><span class="hljs-function">HHOOK <span class="hljs-title">HookStart</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	HHOOK ReturnValue; <span class="hljs-comment">// eax</span><br><br>	ReturnValue = <span class="hljs-built_in">SetWindowsHookEx</span>(<span class="hljs-number">2</span>, MessageProcedure, __ModuleHandle, <span class="hljs-number">0</span>);  <span class="hljs-comment">//系统黑函数</span><br>	__HookModule = ReturnValue;  <span class="hljs-comment">//拦截成功 返回一个钩子钩取的句柄 </span><br>	<span class="hljs-keyword">return</span> ReturnValue;<br>&#125;<br><br><span class="hljs-comment">//SetWindowsHookEx函数的回调函数 MessageProcedure</span><br><span class="hljs-function">LRESULT CALLBACK <span class="hljs-title">MessageProcedure</span><span class="hljs-params">(<span class="hljs-type">int</span> Message, WPARAM wParam, LPARAM lParam)</span></span><br><span class="hljs-function"></span>&#123;<br>	TCHAR v1[<span class="hljs-number">260</span>] = &#123; <span class="hljs-number">0</span> &#125;; <span class="hljs-comment">// 文件的完整路径</span><br> 	TCHAR v2[<span class="hljs-number">50</span>] = &#123; <span class="hljs-number">0</span> &#125;; <span class="hljs-comment">//按键文本</span><br>	TCHAR* v3; <span class="hljs-comment">// 游走指针</span><br>	<span class="hljs-built_in">memset</span>(&amp;v1, <span class="hljs-number">0</span>, <span class="hljs-number">260</span>);  <span class="hljs-comment">//初始化</span><br><br>	<span class="hljs-keyword">if</span> (Message &gt;= <span class="hljs-number">0</span><br>		&amp;&amp; ParamemterData2 &gt;= <span class="hljs-number">0</span><br>		&amp;&amp; (<span class="hljs-built_in">GetModuleFileName</span>(<span class="hljs-number">0</span>,v1,<span class="hljs-number">260</span>), v3 = _tcsrchr(v1, <span class="hljs-number">92</span>), !_tcsicmp(v3 + <span class="hljs-number">1</span>, _T(<span class="hljs-string">&quot;notepad.exe&quot;</span>))))<br>	&#123;<br>		<span class="hljs-built_in">GetKeyNameText</span>(ParamemterData2, v2, <span class="hljs-number">50</span>);<br>		<span class="hljs-built_in">MessageBox</span>(<span class="hljs-literal">NULL</span>, v2, _T(<span class="hljs-string">&quot;Filter&quot;</span>), <span class="hljs-number">0</span>);<br>		ResultValue = <span class="hljs-number">1</span>;<br>	&#125;<br>	<span class="hljs-keyword">else</span><br>	&#123;<br>		<span class="hljs-comment">//不做拦截</span><br>		ResultValue = <span class="hljs-built_in">CallNextHookEx</span>(<span class="hljs-literal">NULL</span>, Message, ParameterData1, ParamemterData2);<br>	&#125;<br>	<span class="hljs-keyword">return</span> ResultValue;<br>&#125;<br><br><span class="hljs-comment">//IDA Export 中发现的导出函数 HookStop</span><br><span class="hljs-function">HHOOK <span class="hljs-title">HookStop</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	HHOOK ReturnValue; <span class="hljs-comment">// eax</span><br><br>	ReturnValue = __HookModule;<br>	<span class="hljs-keyword">if</span> (__HookModule)<br>	&#123;<br>		ReturnValue = (HHOOK)<span class="hljs-built_in">UnhookWindowsHookEx</span>(__HookModule);<br>		__HookModule = <span class="hljs-number">0</span>;<br>	&#125;<br>	<span class="hljs-keyword">return</span> ReturnValue;<br>&#125;<br><span class="hljs-comment">//Source.def  资源文件(导出表)</span><br> EXPORTS<br>	HookStart @<span class="hljs-number">1</span><br>	HookStop  @<span class="hljs-number">2</span><br></code></pre></td></tr></table></figure>
 
@@ -332,6 +333,41 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/HOOK%E9%9B%86%E5%90%88/" class="category-chain-item">HOOK集合</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/HOOK%E9%9B%86%E5%90%88/Demo/" class="category-chain-item">Demo</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/HOOK/">#HOOK</a>
+      
+    </div>
   
 </div>
 
@@ -385,6 +421,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/02/26/HideProcess/" title="HideProcess">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">HideProcess</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
