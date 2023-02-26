@@ -16,24 +16,25 @@
   <meta name="author" content="Sivan Zhang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="代码具体分为两部分1.KeyHook 动态链接库2.HookMain    主程序入口">
+    <meta name="description" content="git远程仓库相关指令以及文件上传">
 <meta property="og:type" content="article">
-<meta property="og:title" content="键盘过滤">
-<meta property="og:url" content="https://wlpswmt.github.io/2023/02/26/%E9%94%AE%E7%9B%98%E8%BF%87%E6%BB%A4/index.html">
+<meta property="og:title" content="Git远程仓库">
+<meta property="og:url" content="https://wlpswmt.github.io/2023/02/26/git%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93/index.html">
 <meta property="og:site_name" content="Silent">
-<meta property="og:description" content="代码具体分为两部分1.KeyHook 动态链接库2.HookMain    主程序入口">
+<meta property="og:description" content="git远程仓库相关指令以及文件上传">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-02-26T09:30:50.000Z">
-<meta property="article:modified_time" content="2023-02-26T10:33:29.790Z">
+<meta property="article:published_time" content="2023-02-26T07:08:47.000Z">
+<meta property="article:modified_time" content="2023-02-26T14:36:19.689Z">
 <meta property="article:author" content="Sivan Zhang">
-<meta property="article:tag" content="HOOK">
+<meta property="article:tag" content="Git">
+<meta property="article:tag" content="指令">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>键盘过滤 - Silent</title>
+  <title>Git远程仓库 - Silent</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -217,7 +218,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="键盘过滤"></span>
+            <span id="subtitle" data-typed-text="Git远程仓库"></span>
           
         </div>
 
@@ -233,7 +234,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-02-26 17:30" pubdate>
+        <time datetime="2023-02-26 15:08" pubdate>
           2023年2月26日 下午
         </time>
       </span>
@@ -245,7 +246,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.8k 字
+          2.5k 字
         
       </span>
     
@@ -256,7 +257,7 @@
         
         
         
-          35 分钟
+          32 分钟
         
       </span>
     
@@ -302,12 +303,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">键盘过滤</h1>
+            <h1 style="display: none">Git远程仓库</h1>
             
               <p class="note note-primary">
                 
                   
-                    本文最后更新于：4 小时前
+                    本文最后更新于：几秒前
                   
                 
               </p>
@@ -315,16 +316,90 @@
             
               <div class="markdown-body">
                 
-                <p>代码具体分为两部分<br>1.KeyHook 动态链接库<br>2.HookMain    主程序入口</p>
-<span id="more"></span>
-
-<p>1.KeyHook 动态链接库<br>DllMain.cpp<br>Source.def</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//DllMain.cpp   </span><br>   <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br>   <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;tchar.h&gt;</span></span><br>   <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;Windows.h&gt;</span></span><br>   <span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br>   HINSTANCE __ModuleHandle = <span class="hljs-literal">NULL</span>;  <span class="hljs-comment">//模块句柄（基地址）</span><br>   HHOOK  __HookModule = <span class="hljs-literal">NULL</span>;       <span class="hljs-comment">//钩子句柄（基地址）</span><br>   <span class="hljs-function">LRESULT CALLBACK <span class="hljs-title">MessageProcedure</span><span class="hljs-params">(<span class="hljs-type">int</span> Message, WPARAM wParam, LPARAM lParam)</span></span><br><span class="hljs-function"><span class="hljs-comment">//DllMain 的规范写法 注意程序位数 钩子程序位数需要和所需钩的程序或系统的位数相匹配</span></span><br><span class="hljs-function">BOOL WINAPI <span class="hljs-title">DllMain</span><span class="hljs-params">(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-keyword">switch</span> (ul_reason_for_call)<br>	&#123;<br>	<span class="hljs-keyword">case</span> DLL_PROCESS_ATTACH:<br>	&#123;<br>		__ModuleHandle = hinstDLL;<br>		<span class="hljs-keyword">break</span>;<br>	&#125;<br>	<span class="hljs-keyword">case</span> DLL_THREAD_ATTACH:<br>	<span class="hljs-keyword">case</span> DLL_THREAD_DETACH:<br>	<span class="hljs-keyword">case</span> DLL_PROCESS_DETACH:<br>		<span class="hljs-keyword">break</span>;<br>	&#125;<br>	<span class="hljs-keyword">return</span> TRUE;<br>&#125;<br><span class="hljs-comment">//IDA Export 中发现的导出函数 HookStart</span><br><span class="hljs-function">HHOOK <span class="hljs-title">SetWindowsHookEx</span><span class="hljs-params">(      </span></span><br><span class="hljs-params"><span class="hljs-function">		 <span class="hljs-type">int</span> idHook,      <span class="hljs-comment">//消息ID</span></span></span><br><span class="hljs-params"><span class="hljs-function">    HOOKPROC lpfn,   <span class="hljs-comment">//回调函数</span></span></span><br><span class="hljs-params"><span class="hljs-function">    HINSTANCE hMod,  <span class="hljs-comment">//模块句柄</span></span></span><br><span class="hljs-params"><span class="hljs-function">    DWORD dwThreadId <span class="hljs-comment">//线程ID 一般为0</span></span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span>;<br><span class="hljs-function">HHOOK <span class="hljs-title">HookStart</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	HHOOK ReturnValue; <span class="hljs-comment">// eax</span><br><br>	ReturnValue = <span class="hljs-built_in">SetWindowsHookEx</span>(<span class="hljs-number">2</span>, MessageProcedure, __ModuleHandle, <span class="hljs-number">0</span>);  <span class="hljs-comment">//系统黑函数</span><br>	__HookModule = ReturnValue;  <span class="hljs-comment">//拦截成功 返回一个钩子钩取的句柄 </span><br>	<span class="hljs-keyword">return</span> ReturnValue;<br>&#125;<br><br><span class="hljs-comment">//SetWindowsHookEx函数的回调函数 MessageProcedure</span><br><span class="hljs-function">LRESULT CALLBACK <span class="hljs-title">MessageProcedure</span><span class="hljs-params">(<span class="hljs-type">int</span> Message, WPARAM wParam, LPARAM lParam)</span></span><br><span class="hljs-function"></span>&#123;<br>	TCHAR v1[<span class="hljs-number">260</span>] = &#123; <span class="hljs-number">0</span> &#125;; <span class="hljs-comment">// 文件的完整路径</span><br> 	TCHAR v2[<span class="hljs-number">50</span>] = &#123; <span class="hljs-number">0</span> &#125;; <span class="hljs-comment">//按键文本</span><br>	TCHAR* v3; <span class="hljs-comment">// 游走指针</span><br>	<span class="hljs-built_in">memset</span>(&amp;v1, <span class="hljs-number">0</span>, <span class="hljs-number">260</span>);  <span class="hljs-comment">//初始化</span><br><br>	<span class="hljs-keyword">if</span> (Message &gt;= <span class="hljs-number">0</span><br>		&amp;&amp; ParamemterData2 &gt;= <span class="hljs-number">0</span><br>		&amp;&amp; (<span class="hljs-built_in">GetModuleFileName</span>(<span class="hljs-number">0</span>,v1,<span class="hljs-number">260</span>), v3 = _tcsrchr(v1, <span class="hljs-number">92</span>), !_tcsicmp(v3 + <span class="hljs-number">1</span>, _T(<span class="hljs-string">&quot;notepad.exe&quot;</span>))))<br>	&#123;<br>		<span class="hljs-built_in">GetKeyNameText</span>(ParamemterData2, v2, <span class="hljs-number">50</span>);<br>		<span class="hljs-built_in">MessageBox</span>(<span class="hljs-literal">NULL</span>, v2, _T(<span class="hljs-string">&quot;Filter&quot;</span>), <span class="hljs-number">0</span>);<br>		ResultValue = <span class="hljs-number">1</span>;<br>	&#125;<br>	<span class="hljs-keyword">else</span><br>	&#123;<br>		<span class="hljs-comment">//不做拦截</span><br>		ResultValue = <span class="hljs-built_in">CallNextHookEx</span>(<span class="hljs-literal">NULL</span>, Message, ParameterData1, ParamemterData2);<br>	&#125;<br>	<span class="hljs-keyword">return</span> ResultValue;<br>&#125;<br><br><span class="hljs-comment">//IDA Export 中发现的导出函数 HookStop</span><br><span class="hljs-function">HHOOK <span class="hljs-title">HookStop</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	HHOOK ReturnValue; <span class="hljs-comment">// eax</span><br><br>	ReturnValue = __HookModule;<br>	<span class="hljs-keyword">if</span> (__HookModule)<br>	&#123;<br>		ReturnValue = (HHOOK)<span class="hljs-built_in">UnhookWindowsHookEx</span>(__HookModule);<br>		__HookModule = <span class="hljs-number">0</span>;<br>	&#125;<br>	<span class="hljs-keyword">return</span> ReturnValue;<br>&#125;<br><span class="hljs-comment">//Source.def  资源文件(导出表)</span><br> EXPORTS<br>	HookStart @<span class="hljs-number">1</span><br>	HookStop  @<span class="hljs-number">2</span><br></code></pre></td></tr></table></figure>
-
-<p>2.HookMain主程序入口</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//_tmain.cpp</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;tchar.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;Windows.h&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">void</span>  <span class="hljs-params">(_cdecl *LPFN_SUB)</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span>;  <span class="hljs-comment">//函数指针</span><br><span class="hljs-type">int</span> _tmain()<br>&#123;<br>	HMODULE ModuleHandle; <span class="hljs-comment">// eax@1 模块句柄（基地址）</span><br>	DWORD v5; <span class="hljs-comment">// eax@2  报错</span><br>	<span class="hljs-type">int</span> ResultValue; <span class="hljs-comment">// eax@2</span><br>	<span class="hljs-comment">//void(*v7)(void); </span><br>	<span class="hljs-comment">//void(*v8)(void); </span><br>	LPFN_SUB v7 = <span class="hljs-literal">NULL</span>;<br>	LPFN_SUB v8 = <span class="hljs-literal">NULL</span>;<br><br>	ModuleHandle = <span class="hljs-built_in">LoadLibraryA</span>(<span class="hljs-string">&quot;HookKey.dll&quot;</span>);  <span class="hljs-comment">//加载模块的句柄</span><br>	<span class="hljs-keyword">if</span> (ModuleHandle)<br>	&#123;<br>		v7 = (<span class="hljs-built_in">void</span>(*)(<span class="hljs-type">void</span>))<span class="hljs-built_in">GetProcAddress</span>(ModuleHandle, <span class="hljs-string">&quot;HookStart&quot;</span>);<br>		v8 = (<span class="hljs-built_in">void</span>(*)(<span class="hljs-type">void</span>))<span class="hljs-built_in">GetProcAddress</span>(ModuleHandle, <span class="hljs-string">&quot;HookStop&quot;</span>);<br>		<span class="hljs-built_in">v7</span>();<br>		_tprintf(_T(<span class="hljs-string">&quot;press &#x27;q&#x27; to quit!\n&quot;</span>));<br>		<span class="hljs-keyword">while</span> (_gettchar() != <span class="hljs-number">113</span>)<br>		&#123;<br><br>		&#125;<br>		<span class="hljs-built_in">v8</span>();<br>		<span class="hljs-built_in">FreeLibrary</span>(ModuleHandle); <br>	&#125;<br>	<span class="hljs-keyword">else</span><br>	&#123;<br>		v5 = <span class="hljs-built_in">GetLastError</span>();		<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h2 id="git远程仓库相关指令以及文件上传"><a href="#git远程仓库相关指令以及文件上传" class="headerlink" title="git远程仓库相关指令以及文件上传"></a>git远程仓库相关指令以及文件上传</h2><span id="more"></span>
 
 
+<p>网址：<a target="_blank" rel="noopener" href="https://github.com/">https://github.com</a></p>
+<p>xxx账户：<a href="mailto:&#52;&#49;&#57;&#x33;&#x31;&#x37;&#55;&#x36;&#x38;&#64;&#x71;&#x71;&#x2e;&#99;&#111;&#x6d;">&#52;&#49;&#57;&#x33;&#x31;&#x37;&#55;&#x36;&#x38;&#64;&#x71;&#x71;&#x2e;&#99;&#111;&#x6d;</a>   用户名zxw0218，密码：一般密码</p>
+<p>以将/d/gitproject/pycharm_python_and_pyqt中的文件同步到git中的zxw0218下的pycharm_python_and_pyqt为例</p>
+<p>[TOC]</p>
+<h2 id="查看分支状态"><a href="#查看分支状态" class="headerlink" title="查看分支状态"></a>查看分支状态</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apl">git status<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="创建版本库"><a href="#创建版本库" class="headerlink" title="创建版本库"></a>创建版本库</h2><p>git init 把当前的目录变成Git管理的版本库</p>
+<p>git status 查看当前分支状态</p>
+<p>git add . 把当前文件夹下的文件提交到暂存区</p>
+<p>紧接着git commit -m “提交标签，如first proposed” 把暂存区提交到版本库</p>
+<p>执行git status查看状态，确保工作区是干净的，没有需要提交的内容</p>
+<p>（git log查看提交日志，git reflog查看提交版本号）</p>
+<h2 id="远程同步"><a href="#远程同步" class="headerlink" title="远程同步"></a>远程同步</h2><p>git remote -v查看远程版本库信息</p>
+<p>创建github上的git仓库，例如在github的zhzj0218下创建了仓库pycharm_python_and_pyqt.git</p>
+<p>git remote add origin <a target="_blank" rel="noopener" href="https://github.com/zhzj0218/pycharm_python_and_pyqt.git">https://github.com/zhzj0218/pycharm_python_and_pyqt.git</a></p>
+<p>将本地仓库关联到Github仓库</p>
+<p>再次查看git remote -v，确认远程仓库关联成功</p>
+<p>git push -u origin master 将本地仓库的内容推送到Github仓库</p>
+<h2 id="远程库克隆到本地"><a href="#远程库克隆到本地" class="headerlink" title="远程库克隆到本地"></a>远程库克隆到本地</h2><p>git clone <a target="_blank" rel="noopener" href="https://github.com/zxw0218/pycharm_python_and_pyqt.git">https://github.com/zxw0218/pycharm_python_and_pyqt.git</a></p>
+<p>将远程仓库的内容克隆到本地</p>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><h3 id="创建版本库-1"><a href="#创建版本库-1" class="headerlink" title="创建版本库"></a>创建版本库</h3><p>git clone <url> 克隆远程版本库到本地</p>
+<p>git init 初始化本地版本库</p>
+<h3 id="修改和提交gi"><a href="#修改和提交gi" class="headerlink" title="修改和提交gi"></a>修改和提交gi</h3><p>git status 查看状态，也可查看冲突的文件</p>
+<p>git dif 查看变更内容</p>
+<p>git add . 跟踪所有改动过的内容</p>
+<p>git add <file> 跟踪制定的文件</p>
+<p>git mv <old> <new> 文件改名</p>
+<p>git rm <file> 删除文件</p>
+<p>git rm –cached <file> 停止跟踪文件但不删除</p>
+<p>git commit -m “commit message” 提交所有更新过的文件</p>
+<p>git commit –amend 修改最后一次提交</p>
+<h3 id="查看提交历史"><a href="#查看提交历史" class="headerlink" title="查看提交历史"></a>查看提交历史</h3><p>git log 查看提交历史</p>
+<p>git log -p <file> 查看指定文件的提交历史</p>
+<p>git blame <file> 以列表方式查看指定文件的提交历史</p>
+<h3 id="撤销"><a href="#撤销" class="headerlink" title="撤销"></a>撤销</h3><p>git reset –hard HEAD 撤销工作目录中所有未提交文件的修改内容</p>
+<p>git checkout HEAD <file> 撤销指定的未提交文件的修改内容</p>
+<p>git revert <commit> 撤销指定的提交</p>
+<p>git reset –hard HEAD^ 还原到上一个版本</p>
+<p>git reset –hard 18b6a 回到之前版本，此处18b6a为某个版本号，版本号无需写全</p>
+<p>（git log查看提交历史，可看到版本号，git log –pretty=oneline可简化输出查看版本号，HEAD^表示上一次版本，HEAD^^表示上上一个版本，也可以用数字表示，HEAD~2，也可以用git reflog查看版本号，此时的版本号较短，为简短版本号）</p>
+<p>git checkout – <file> 文件没有添加到暂存区时，撤回工作区的修改</p>
+<p>git reset HEAD <file> 文件已经添加到暂存区时，撤销暂存区的修改，然后再使用git check – <file> 撤回工作区的修改</p>
+<h3 id="分支与标签"><a href="#分支与标签" class="headerlink" title="分支与标签"></a>分支与标签</h3><p>git branch 显示所有本地分支</p>
+<p>git checkout &lt;branch/tag&gt; 切换到指定分支或者标签</p>
+<p>git branch <new-branch> 创建新分支</p>
+<p>git branch -d <branch> 删除本地分支</p>
+<p>git tag 列出所有本地标签</p>
+<p>git tag <tagname>基于最新提交创建标签</p>
+<p>git tag -d <tagname> 删除标签</p>
+<h3 id="合并与衍合"><a href="#合并与衍合" class="headerlink" title="合并与衍合"></a>合并与衍合</h3><p>git merge <branch> 合并指定分支到当前分支</p>
+<p>git rebase <branch> 衍合指定分支到当前分支</p>
+<h3 id="远程操作"><a href="#远程操作" class="headerlink" title="远程操作"></a>远程操作</h3><p>git remote -v 查看远程版本库信息</p>
+<p>git remote show <remote> 查看指定远程版本库信息</p>
+<p>git remote add <remote> <url> 添加远程版本库</p>
+<p>git fetch <remote> 从远程库获取代码</p>
+<p>git pull <remote> <branch> 下载代码及快速合并</p>
+<p>git push <remote> <branch> 上传代码及快速合并</p>
+<p>git push <remote>  :&lt;branch/tag-name&gt; 删除远程分支或标签</p>
+<p>git push –tags 上传所有标签</p>
+<p>git remote rm origin移除原先错误的origin remote</p>
+<h3 id="查看和修改用户名和邮箱"><a href="#查看和修改用户名和邮箱" class="headerlink" title="查看和修改用户名和邮箱"></a>查看和修改用户名和邮箱</h3><p>git config user.name查看用户名</p>
+<p>git config user.email查看邮箱</p>
+<p>git config –global user.name “your name”修改用户名为your name</p>
+<p>git config –global user.email “your email”修改用户名为your email</p>
+<h3 id="密码输入错误的解决方法"><a href="#密码输入错误的解决方法" class="headerlink" title="密码输入错误的解决方法"></a>密码输入错误的解决方法</h3><p>在控制面板，管理windows凭证，修改正确的密码</p>
+<h3 id="大文件上传"><a href="#大文件上传" class="headerlink" title="大文件上传"></a>大文件上传</h3><p>git默认不能上传超过100M的文件，如果上传100M的文件，则会出现fatal: The remote end hung up unexpectedly的错误，表示存在大文件不能上传。因此需要处理大文件的上传。</p>
+<p>示例：假设当前存在后缀为.exe，.zip及.whl的大文件，处理步骤如下：</p>
+<p>git lfs install 安装lfs</p>
+<p>git lfs track “*.zip”</p>
+<p>git lfs track “*.exe”</p>
+<p>git lfs track “*.whl”</p>
+<p>则文件夹中生成的.gitattributes文件内容如下：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs routeros">*.exe <span class="hljs-attribute">filter</span>=lfs <span class="hljs-attribute">diff</span>=lfs <span class="hljs-attribute">merge</span>=lfs -text<br>*.zip <span class="hljs-attribute">filter</span>=lfs <span class="hljs-attribute">diff</span>=lfs <span class="hljs-attribute">merge</span>=lfs -text<br>*.whl <span class="hljs-attribute">filter</span>=lfs <span class="hljs-attribute">diff</span>=lfs <span class="hljs-attribute">merge</span>=lfs -text<br></code></pre></td></tr></table></figure>
+
+<p>git add .gitattributes 将.gitattributes文件加入到暂存区</p>
+<p>git commit -m “add lfs file” 提交文件</p>
+<p>git push origin master 将本地仓库内容提交到Github仓库（包含大文件提交，提交的大文件具有lfs标签，表明为大文件）</p>
+<p>参考资料</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/gdjlc/p/12088872.html">https://www.cnblogs.com/gdjlc/p/12088872.html</a></p>
 
                 
               </div>
@@ -343,15 +418,8 @@
     
       <span class="category-chain">
         
-  <a href="/categories/HOOK%E9%9B%86%E5%90%88/" class="category-chain-item">HOOK集合</a>
+  <a href="/categories/Git/" class="category-chain-item">Git</a>
   
-  
-    <span>></span>
-    
-  <a href="/categories/HOOK%E9%9B%86%E5%90%88/Demo/" class="category-chain-item">Demo</a>
-  
-  
-
   
 
       </span>
@@ -365,7 +433,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/HOOK/">#HOOK</a>
+        <a href="/tags/Git/">#Git</a>
+      
+        <a href="/tags/%E6%8C%87%E4%BB%A4/">#指令</a>
       
     </div>
   
@@ -377,8 +447,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>键盘过滤</div>
-      <div>https://wlpswmt.github.io/2023/02/26/键盘过滤/</div>
+      <div>Git远程仓库</div>
+      <div>https://wlpswmt.github.io/2023/02/26/git远程仓库/</div>
     </div>
     <div class="license-meta">
       
@@ -422,21 +492,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/02/26/HideProcess/" title="HideProcess">
+                      <a href="/2023/02/26/%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/" title="回调函数">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">HideProcess</span>
+                        <span class="hidden-mobile">回调函数</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
-                    
-                      <a href="/2023/02/26/%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/" title="回调函数">
-                        <span class="hidden-mobile">回调函数</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
                     
                   </article>
                 </div>

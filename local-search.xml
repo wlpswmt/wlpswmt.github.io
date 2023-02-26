@@ -99,5 +99,32 @@
   
   
   
+  <entry>
+    <title>Git远程仓库</title>
+    <link href="/2023/02/26/git%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93/"/>
+    <url>/2023/02/26/git%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93/</url>
+    
+    <content type="html"><![CDATA[<h2 id="git远程仓库相关指令以及文件上传"><a href="#git远程仓库相关指令以及文件上传" class="headerlink" title="git远程仓库相关指令以及文件上传"></a>git远程仓库相关指令以及文件上传</h2><span id="more"></span><p>网址：<a href="https://github.com/">https://github.com</a></p><p>xxx账户：<a href="mailto:&#52;&#49;&#57;&#x33;&#x31;&#x37;&#55;&#x36;&#x38;&#64;&#x71;&#x71;&#x2e;&#99;&#111;&#x6d;">&#52;&#49;&#57;&#x33;&#x31;&#x37;&#55;&#x36;&#x38;&#64;&#x71;&#x71;&#x2e;&#99;&#111;&#x6d;</a>   用户名zxw0218，密码：一般密码</p><p>以将/d/gitproject/pycharm_python_and_pyqt中的文件同步到git中的zxw0218下的pycharm_python_and_pyqt为例</p><p>[TOC]</p><h2 id="查看分支状态"><a href="#查看分支状态" class="headerlink" title="查看分支状态"></a>查看分支状态</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apl">git status<br></code></pre></td></tr></table></figure><h2 id="创建版本库"><a href="#创建版本库" class="headerlink" title="创建版本库"></a>创建版本库</h2><p>git init 把当前的目录变成Git管理的版本库</p><p>git status 查看当前分支状态</p><p>git add . 把当前文件夹下的文件提交到暂存区</p><p>紧接着git commit -m “提交标签，如first proposed” 把暂存区提交到版本库</p><p>执行git status查看状态，确保工作区是干净的，没有需要提交的内容</p><p>（git log查看提交日志，git reflog查看提交版本号）</p><h2 id="远程同步"><a href="#远程同步" class="headerlink" title="远程同步"></a>远程同步</h2><p>git remote -v查看远程版本库信息</p><p>创建github上的git仓库，例如在github的zhzj0218下创建了仓库pycharm_python_and_pyqt.git</p><p>git remote add origin <a href="https://github.com/zhzj0218/pycharm_python_and_pyqt.git">https://github.com/zhzj0218/pycharm_python_and_pyqt.git</a></p><p>将本地仓库关联到Github仓库</p><p>再次查看git remote -v，确认远程仓库关联成功</p><p>git push -u origin master 将本地仓库的内容推送到Github仓库</p><h2 id="远程库克隆到本地"><a href="#远程库克隆到本地" class="headerlink" title="远程库克隆到本地"></a>远程库克隆到本地</h2><p>git clone <a href="https://github.com/zxw0218/pycharm_python_and_pyqt.git">https://github.com/zxw0218/pycharm_python_and_pyqt.git</a></p><p>将远程仓库的内容克隆到本地</p><h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><h3 id="创建版本库-1"><a href="#创建版本库-1" class="headerlink" title="创建版本库"></a>创建版本库</h3><p>git clone <url> 克隆远程版本库到本地</p><p>git init 初始化本地版本库</p><h3 id="修改和提交gi"><a href="#修改和提交gi" class="headerlink" title="修改和提交gi"></a>修改和提交gi</h3><p>git status 查看状态，也可查看冲突的文件</p><p>git dif 查看变更内容</p><p>git add . 跟踪所有改动过的内容</p><p>git add <file> 跟踪制定的文件</p><p>git mv <old> <new> 文件改名</p><p>git rm <file> 删除文件</p><p>git rm –cached <file> 停止跟踪文件但不删除</p><p>git commit -m “commit message” 提交所有更新过的文件</p><p>git commit –amend 修改最后一次提交</p><h3 id="查看提交历史"><a href="#查看提交历史" class="headerlink" title="查看提交历史"></a>查看提交历史</h3><p>git log 查看提交历史</p><p>git log -p <file> 查看指定文件的提交历史</p><p>git blame <file> 以列表方式查看指定文件的提交历史</p><h3 id="撤销"><a href="#撤销" class="headerlink" title="撤销"></a>撤销</h3><p>git reset –hard HEAD 撤销工作目录中所有未提交文件的修改内容</p><p>git checkout HEAD <file> 撤销指定的未提交文件的修改内容</p><p>git revert <commit> 撤销指定的提交</p><p>git reset –hard HEAD^ 还原到上一个版本</p><p>git reset –hard 18b6a 回到之前版本，此处18b6a为某个版本号，版本号无需写全</p><p>（git log查看提交历史，可看到版本号，git log –pretty=oneline可简化输出查看版本号，HEAD^表示上一次版本，HEAD^^表示上上一个版本，也可以用数字表示，HEAD~2，也可以用git reflog查看版本号，此时的版本号较短，为简短版本号）</p><p>git checkout – <file> 文件没有添加到暂存区时，撤回工作区的修改</p><p>git reset HEAD <file> 文件已经添加到暂存区时，撤销暂存区的修改，然后再使用git check – <file> 撤回工作区的修改</p><h3 id="分支与标签"><a href="#分支与标签" class="headerlink" title="分支与标签"></a>分支与标签</h3><p>git branch 显示所有本地分支</p><p>git checkout &lt;branch/tag&gt; 切换到指定分支或者标签</p><p>git branch <new-branch> 创建新分支</p><p>git branch -d <branch> 删除本地分支</p><p>git tag 列出所有本地标签</p><p>git tag <tagname>基于最新提交创建标签</p><p>git tag -d <tagname> 删除标签</p><h3 id="合并与衍合"><a href="#合并与衍合" class="headerlink" title="合并与衍合"></a>合并与衍合</h3><p>git merge <branch> 合并指定分支到当前分支</p><p>git rebase <branch> 衍合指定分支到当前分支</p><h3 id="远程操作"><a href="#远程操作" class="headerlink" title="远程操作"></a>远程操作</h3><p>git remote -v 查看远程版本库信息</p><p>git remote show <remote> 查看指定远程版本库信息</p><p>git remote add <remote> <url> 添加远程版本库</p><p>git fetch <remote> 从远程库获取代码</p><p>git pull <remote> <branch> 下载代码及快速合并</p><p>git push <remote> <branch> 上传代码及快速合并</p><p>git push <remote>  :&lt;branch/tag-name&gt; 删除远程分支或标签</p><p>git push –tags 上传所有标签</p><p>git remote rm origin移除原先错误的origin remote</p><h3 id="查看和修改用户名和邮箱"><a href="#查看和修改用户名和邮箱" class="headerlink" title="查看和修改用户名和邮箱"></a>查看和修改用户名和邮箱</h3><p>git config user.name查看用户名</p><p>git config user.email查看邮箱</p><p>git config –global user.name “your name”修改用户名为your name</p><p>git config –global user.email “your email”修改用户名为your email</p><h3 id="密码输入错误的解决方法"><a href="#密码输入错误的解决方法" class="headerlink" title="密码输入错误的解决方法"></a>密码输入错误的解决方法</h3><p>在控制面板，管理windows凭证，修改正确的密码</p><h3 id="大文件上传"><a href="#大文件上传" class="headerlink" title="大文件上传"></a>大文件上传</h3><p>git默认不能上传超过100M的文件，如果上传100M的文件，则会出现fatal: The remote end hung up unexpectedly的错误，表示存在大文件不能上传。因此需要处理大文件的上传。</p><p>示例：假设当前存在后缀为.exe，.zip及.whl的大文件，处理步骤如下：</p><p>git lfs install 安装lfs</p><p>git lfs track “*.zip”</p><p>git lfs track “*.exe”</p><p>git lfs track “*.whl”</p><p>则文件夹中生成的.gitattributes文件内容如下：</p><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs routeros">*.exe <span class="hljs-attribute">filter</span>=lfs <span class="hljs-attribute">diff</span>=lfs <span class="hljs-attribute">merge</span>=lfs -text<br>*.zip <span class="hljs-attribute">filter</span>=lfs <span class="hljs-attribute">diff</span>=lfs <span class="hljs-attribute">merge</span>=lfs -text<br>*.whl <span class="hljs-attribute">filter</span>=lfs <span class="hljs-attribute">diff</span>=lfs <span class="hljs-attribute">merge</span>=lfs -text<br></code></pre></td></tr></table></figure><p>git add .gitattributes 将.gitattributes文件加入到暂存区</p><p>git commit -m “add lfs file” 提交文件</p><p>git push origin master 将本地仓库内容提交到Github仓库（包含大文件提交，提交的大文件具有lfs标签，表明为大文件）</p><p>参考资料</p><p><a href="https://www.cnblogs.com/gdjlc/p/12088872.html">https://www.cnblogs.com/gdjlc/p/12088872.html</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Git</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Git</tag>
+      
+      <tag>指令</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
   
 </search>
