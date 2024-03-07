@@ -7,8 +7,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/project/img/cutegirl.png">
-  <link rel="icon" href="/project/img/cutegirl.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/cutegirl.png">
+  <link rel="icon" href="/img/cutegirl.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -19,19 +19,19 @@
     <meta name="description" content="探索多态模型—菱形继承和菱形虚拟继承">
 <meta property="og:type" content="article">
 <meta property="og:title" content="探讨多态的原理 - 菱形虚拟继承">
-<meta property="og:url" content="https://wlpswmt.github.io/project/2023/03/19/%E8%8F%B1%E5%BD%A2%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF/index.html">
+<meta property="og:url" content="https://wlpswmt.github.io/2023/03/19/%E8%8F%B1%E5%BD%A2%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF/index.html">
 <meta property="og:site_name" content="Silence">
 <meta property="og:description" content="探索多态模型—菱形继承和菱形虚拟继承">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://wlpswmt.github.io/project/dimond_images/%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF.png">
-<meta property="og:image" content="https://wlpswmt.github.io/project/dimond_images/%E8%99%9A%E8%A1%A8%E7%9A%84%E7%BB%93%E6%9E%9C.png">
-<meta property="og:image" content="https://wlpswmt.github.io/project/dimond_images/%E8%8F%B1%E5%BD%A2%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF.png">
+<meta property="og:image" content="https://wlpswmt.github.io/dimond_images/%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF.png">
+<meta property="og:image" content="https://wlpswmt.github.io/dimond_images/%E8%99%9A%E8%A1%A8%E7%9A%84%E7%BB%93%E6%9E%9C.png">
+<meta property="og:image" content="https://wlpswmt.github.io/dimond_images/%E8%8F%B1%E5%BD%A2%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF.png">
 <meta property="article:published_time" content="2023-03-19T13:02:54.000Z">
 <meta property="article:modified_time" content="2023-03-20T15:07:45.421Z">
 <meta property="article:author" content="Sivan Zhang">
 <meta property="article:tag" content="C++">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://wlpswmt.github.io/project/dimond_images/%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF.png">
+<meta name="twitter:image" content="https://wlpswmt.github.io/dimond_images/%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -63,12 +63,12 @@
 <link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
-<link  rel="stylesheet" href="/project/css/main.css" />
+<link  rel="stylesheet" href="/css/main.css" />
 
 
-  <link id="highlight-css" rel="stylesheet" href="/project/css/highlight.css" />
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
   
-    <link id="highlight-css-dark" rel="stylesheet" href="/project/css/highlight-dark.css" />
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
 
 
@@ -77,15 +77,15 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"wlpswmt.github.io","root":"/project/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/project/local-search.xml"};
+    var CONFIG = {"hostname":"wlpswmt.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
       Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
     }
   </script>
-  <script  src="/project/js/utils.js" ></script>
-  <script  src="/project/js/color-schema.js" ></script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
   
 
   
@@ -122,7 +122,7 @@
 <div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand" href="/project/">
+    <a class="navbar-brand" href="/">
       <strong>幽客</strong>
     </a>
 
@@ -141,7 +141,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/project/">
+              <a class="nav-link" href="/">
                 <i class="iconfont icon-home-fill"></i>
                 <span>首页</span>
               </a>
@@ -153,7 +153,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/project/archives/">
+              <a class="nav-link" href="/archives/">
                 <i class="iconfont icon-archive-fill"></i>
                 <span>归档</span>
               </a>
@@ -165,7 +165,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/project/categories/">
+              <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
                 <span>分类</span>
               </a>
@@ -177,7 +177,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/project/tags/">
+              <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
                 <span>标签</span>
               </a>
@@ -189,7 +189,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/project/about/">
+              <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
                 <span>关于</span>
               </a>
@@ -219,7 +219,7 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/project/img/default.png') no-repeat center center; background-size: cover;">
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
@@ -327,13 +327,13 @@
 <span id="more"></span>
 
 <h1 id="类AA被类BB和类CC重复继承："><a href="#类AA被类BB和类CC重复继承：" class="headerlink" title="类AA被类BB和类CC重复继承："></a>类AA被类BB和类CC重复继承：</h1><p>如下图：</p>
-<p><img src="/project/dimond_images/%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF.png" srcset="/project/img/loading.gif" lazyload alt="重复继承"></p>
+<p><img src="/dimond_images/%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF.png" srcset="/img/loading.gif" lazyload alt="重复继承"></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">AA</span><br>&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;AA::a()&quot;</span> &lt;&lt; endl; &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a1</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;AA::a1()&quot;</span> &lt;&lt; endl; &#125;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-type">int</span> _a;<br>&#125;;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">BB</span> : <span class="hljs-keyword">public</span> AA<br>&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;BB::a()&quot;</span> &lt;&lt; endl; &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a2</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;BB::a2()&quot;</span> &lt;&lt; endl; &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a3</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;BB::a3()&quot;</span> &lt;&lt; endl; &#125;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-type">int</span> _b;<br><br>&#125;;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">CC</span> : <span class="hljs-keyword">public</span> AA<br>&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;CC::a()&quot;</span> &lt;&lt; endl; &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a1</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;CC::a1()&quot;</span> &lt;&lt; endl; &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a4</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;CC::a4()&quot;</span> &lt;&lt; endl; &#125;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-type">int</span> _c;<br><br>&#125;;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">DD</span> : <span class="hljs-keyword">public</span> BB , <span class="hljs-keyword">public</span> CC<br>&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;DD::a()&quot;</span> &lt;&lt; endl; &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a2</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;DD::a2()&quot;</span> &lt;&lt; endl; &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a3</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;DD::a3()&quot;</span> &lt;&lt; endl; &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a5</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;DD::a5()&quot;</span> &lt;&lt; endl; &#125;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-type">int</span> _d;<br>&#125;;<br><br><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">void</span><span class="hljs-params">(*FUNC)</span> <span class="hljs-params">()</span></span>;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Print</span><span class="hljs-params">(<span class="hljs-type">int</span> *Vfptr)</span></span><br><span class="hljs-function"></span>&#123;<br>    cout &lt;&lt; <span class="hljs-string">&quot;虚表地址&quot;</span> &lt;&lt; Vfptr &lt;&lt; endl;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; Vfptr[i] != <span class="hljs-number">0</span>; ++i)<br>    &#123;<br>        FUNC f = (FUNC)Vfptr[i];<br>        cout &lt;&lt; <span class="hljs-string">&quot;[&quot;</span> &lt;&lt; i &lt;&lt; <span class="hljs-string">&quot;]&quot;</span> &lt;&lt; endl;<br>        <span class="hljs-built_in">f</span>();<br>    &#125;<br>    cout &lt;&lt; endl;<br>&#125;<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    DD d;<br>    <span class="hljs-type">int</span> *Vfptr1 = (<span class="hljs-type">int</span>*)(*(<span class="hljs-type">int</span>*)&amp;d);<br>    <span class="hljs-type">int</span> *Vfptr2 = (<span class="hljs-type">int</span>*)(*((<span class="hljs-type">int</span>*)&amp;d+<span class="hljs-built_in">sizeof</span>(BB)/<span class="hljs-number">4</span>));<br>    <span class="hljs-built_in">Print</span>(Vfptr1);<br>    <span class="hljs-built_in">Print</span>(Vfptr2);<br>    <span class="hljs-built_in">system</span>(<span class="hljs-string">&quot;pause&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 
 
 <p>虚表的结果：</p>
-<p><img src="/project/dimond_images/%E8%99%9A%E8%A1%A8%E7%9A%84%E7%BB%93%E6%9E%9C.png" srcset="/project/img/loading.gif" lazyload alt="虚表的结果"></p>
+<p><img src="/dimond_images/%E8%99%9A%E8%A1%A8%E7%9A%84%E7%BB%93%E6%9E%9C.png" srcset="/img/loading.gif" lazyload alt="虚表的结果"></p>
 <p>菱形继承总结：</p>
 <blockquote>
 <p>会出现数据冗余和二义性问题<br>派生类会分别继承每个基类的虚函数表，并将自己的虚函数放在第一个虚函数表中<br>成员变量的顺序按照继承的关系排列</p>
@@ -342,7 +342,7 @@
 <p>虚继承就是在类BB和类CC继承的时候加上virtual关键字</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">class</span> <span class="hljs-title class_">AA</span><br>&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;AA::a()&quot;</span> &lt;&lt; endl; &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a1</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;AA::a1()&quot;</span> &lt;&lt; endl; &#125;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-type">int</span> _a;<br>&#125;;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">BB</span> : <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">public</span> AA<br>&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;BB::a()&quot;</span> &lt;&lt; endl; &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a2</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;BB::a2()&quot;</span> &lt;&lt; endl; &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a3</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;BB::a3()&quot;</span> &lt;&lt; endl; &#125;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-type">int</span> _b;<br><br>&#125;;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">CC</span> : <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">public</span> AA<br>&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;CC::a()&quot;</span> &lt;&lt; endl; &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a1</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;CC::a1()&quot;</span> &lt;&lt; endl; &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a4</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;CC::a4()&quot;</span> &lt;&lt; endl; &#125;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-type">int</span> _c;<br><br>&#125;;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">DD</span> : <span class="hljs-keyword">public</span> BB , <span class="hljs-keyword">public</span> CC<br>&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;DD::a()&quot;</span> &lt;&lt; endl; &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a2</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;DD::a2()&quot;</span> &lt;&lt; endl; &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a3</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;DD::a3()&quot;</span> &lt;&lt; endl; &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">a5</span><span class="hljs-params">()</span></span>&#123; cout &lt;&lt; <span class="hljs-string">&quot;DD::a5()&quot;</span> &lt;&lt; endl; &#125;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-type">int</span> _d;<br>&#125;;<br><br><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">void</span><span class="hljs-params">(*FUNC)</span> <span class="hljs-params">()</span></span>;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Print</span><span class="hljs-params">(<span class="hljs-type">int</span> *Vfptr)</span></span><br><span class="hljs-function"></span>&#123;<br>    cout &lt;&lt; <span class="hljs-string">&quot;虚表地址&quot;</span> &lt;&lt; Vfptr &lt;&lt; endl;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; Vfptr[i] != <span class="hljs-number">0</span>; ++i)<br>    &#123;<br>        FUNC f = (FUNC)Vfptr[i];<br>        cout &lt;&lt; <span class="hljs-string">&quot;[&quot;</span> &lt;&lt; i &lt;&lt; <span class="hljs-string">&quot;]&quot;</span> &lt;&lt; endl;<br>        <span class="hljs-built_in">f</span>();<br>    &#125;<br>    cout &lt;&lt; endl;<br>&#125;<br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>    DD d;<br>    <span class="hljs-type">int</span> *Vfptr1 = (<span class="hljs-type">int</span>*)(*(<span class="hljs-type">int</span>*)&amp;d);<br>    <span class="hljs-type">int</span> *Vfptr2 = (<span class="hljs-type">int</span>*)(*(<span class="hljs-type">int</span>*)((<span class="hljs-type">char</span>*)&amp;d+<span class="hljs-built_in">sizeof</span>(DD)-<span class="hljs-built_in">sizeof</span>(AA)));<br>    <span class="hljs-type">int</span> *Vfptr3 = (<span class="hljs-type">int</span>*)(*((<span class="hljs-type">int</span>*)((<span class="hljs-type">char</span>*)&amp;d + <span class="hljs-built_in">sizeof</span>(BB)-<span class="hljs-built_in">sizeof</span>(AA))));<br><br>    <span class="hljs-built_in">Print</span>(Vfptr1);<br>    <span class="hljs-built_in">Print</span>(Vfptr2);<br>    <span class="hljs-built_in">Print</span>(Vfptr3);<br><br>    <span class="hljs-built_in">system</span>(<span class="hljs-string">&quot;pause&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p><img src="/project/dimond_images/%E8%8F%B1%E5%BD%A2%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF.png" srcset="/project/img/loading.gif" lazyload alt="菱形虚拟继承"></p>
+<p><img src="/dimond_images/%E8%8F%B1%E5%BD%A2%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF.png" srcset="/img/loading.gif" lazyload alt="菱形虚拟继承"></p>
 
                 
               </div>
@@ -361,12 +361,12 @@
     
       <span class="category-chain">
         
-  <a href="/project/categories/C/" class="category-chain-item">C++</a>
+  <a href="/categories/C/" class="category-chain-item">C++</a>
   
   
     <span>></span>
     
-  <a href="/project/categories/C/%E9%9D%A2%E8%AF%95/" class="category-chain-item">面试</a>
+  <a href="/categories/C/%E9%9D%A2%E8%AF%95/" class="category-chain-item">面试</a>
   
   
 
@@ -383,7 +383,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/project/tags/C/">#C++</a>
+        <a href="/tags/C/">#C++</a>
       
     </div>
   
@@ -396,7 +396,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>探讨多态的原理 - 菱形虚拟继承</div>
-      <div>https://wlpswmt.github.io/project/2023/03/19/菱形虚拟继承/</div>
+      <div>https://wlpswmt.github.io/2023/03/19/菱形虚拟继承/</div>
     </div>
     <div class="license-meta">
       
@@ -440,7 +440,7 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/project/2023/03/19/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/" title="右值引用">
+                      <a href="/2023/03/19/%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8/" title="右值引用">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">右值引用</span>
                         <span class="visible-mobile">上一篇</span>
@@ -450,7 +450,7 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/project/2023/03/17/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/" title="智能指针">
+                      <a href="/2023/03/17/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/" title="智能指针">
                         <span class="hidden-mobile">智能指针</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -609,8 +609,8 @@
 
 <script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
 <script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/project/js/events.js" ></script>
-<script  src="/project/js/plugins.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
 
 
   <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
@@ -632,7 +632,7 @@
 
 
   
-    <script  src="/project/js/img-lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
@@ -731,7 +731,7 @@
 
   <script>Fluid.plugins.imageCaption();</script>
 
-  <script  src="/project/js/local-search.js" ></script>
+  <script  src="/js/local-search.js" ></script>
 
   <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
@@ -741,7 +741,7 @@
 
 <!-- 主题的启动项，将它保持在最底部 -->
 <!-- the boot of the theme, keep it at the bottom -->
-<script  src="/project/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script>
 
 
   
@@ -749,7 +749,7 @@
   <noscript>
     <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
   </noscript>
-<script src="/project/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"/project/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":250,"height":400},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":250,"height":400},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>
 <!--������ʾ����-->
 <script type="text/javascript" src="/js/click_show_text.js"></script>
