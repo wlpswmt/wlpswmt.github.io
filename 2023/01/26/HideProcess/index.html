@@ -1,0 +1,758 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/project/img/cutegirl.png">
+  <link rel="icon" href="/project/img/cutegirl.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Sivan Zhang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Dll注入方式：远程线程注入  CreateRemoteThread()该程序主要核心为InstallInlineHook_x86()和InstallInlineHook_x64()两个函数同时由于不同操作系统下，两个函数的实现方式不同">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HideProcess">
+<meta property="og:url" content="https://wlpswmt.github.io/project/2023/01/26/HideProcess/index.html">
+<meta property="og:site_name" content="Silence">
+<meta property="og:description" content="Dll注入方式：远程线程注入  CreateRemoteThread()该程序主要核心为InstallInlineHook_x86()和InstallInlineHook_x64()两个函数同时由于不同操作系统下，两个函数的实现方式不同">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-01-26T09:53:46.000Z">
+<meta property="article:modified_time" content="2023-03-19T13:37:29.075Z">
+<meta property="article:author" content="Sivan Zhang">
+<meta property="article:tag" content="HOOK">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>HideProcess - Silence</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/project/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/project/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/project/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"wlpswmt.github.io","root":"/project/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/project/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/project/js/utils.js" ></script>
+  <script  src="/project/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/project/">
+      <strong>幽客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/project/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="HideProcess"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Sivan Zhang
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-01-26 17:53" pubdate>
+          2023年1月26日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          15k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          190 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">HideProcess</h1>
+            
+              <p class="note note-primary">
+                
+                  
+                    本文最后更新于：1 年前
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Dll注入方式：远程线程注入  CreateRemoteThread()<br>该程序主要核心为InstallInlineHook_x86()和InstallInlineHook_x64()两个函数<br>同时由于不同操作系统下，两个函数的实现方式不同</p>
+<span id="more"></span>
+
+<h4 id="x86位系统下，实现流程为："><a href="#x86位系统下，实现流程为：" class="headerlink" title="x86位系统下，实现流程为："></a>x86位系统下，实现流程为：</h4><p>​    1)借助ntdll.dll模块句柄获取NtQuerySystemInformation的函数地址OriginalAddress 该函数可以遍历进程信息 属于任务管理器的一大特征函数<br>​    2)申请虚拟内存地址 一个跳板地址TrampolineAddress 若VirtualAlloc第一个参数为NULL,分配的内存必以64K的整数倍为内存起始地址,哪怕你只分配一个字节<br>​    3)将获取的NtQuerySystemInformation的函数的前五个指令拷贝到shellcode中<br>​    4)获取OriginalAddress到TrampolineAddress的偏移值，并将该偏移写入shellcode中E9指令后面，用作跳转<br>​    5)将shellcode写入跳板地址处<br>​    6)将跳板地址定义为白名单地址<br>​    7)计算我们注入DLL中的函数FakeNtQuerySystemInformation到NtQuerySystemInformation的偏移 赋给一片带有E9指令的缓冲区后，用作跳转指令<br>​    8)将该跳转指令覆盖源函数的前五个字节</p>
+<h4 id="x64位系统下，实现流程为："><a href="#x64位系统下，实现流程为：" class="headerlink" title="x64位系统下，实现流程为："></a>x64位系统下，实现流程为：</h4><p>​    1)shellcode中的不使用E9跳转指令 而转用FF 25指令 因为E9指令后跟的偏移为4bytes在64位下，可能放不下 所以用FF 25 + 绝对地址的形式<br>​    2)获取模块句柄和函数地址等方法与x86类似<br>​    3)主要区别在于shellcode的编写<br>​    4)为跳板地址分配内存时，需要注意需要可以容纳一个绝对地址 的PAGE 4k(4096B)<br>​    5)将注入Dll的函数的绝对地址写入shellcode</p>
+<p>两个项目<br>1.Dll<br>2.HideProcess</p>
+<p>1.Dll<br>    1)DllMain.h<br>    2)DllMain.cpp</p>
+<p>1)DllMain.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> once</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;Windows.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;tchar.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-meta">#<span class="hljs-keyword">if</span> _WIN32 || _WIN64</span><br><span class="hljs-meta">#<span class="hljs-keyword">if</span> _WIN64</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> ENVIRONMENT_64</span><br><span class="hljs-meta">#<span class="hljs-keyword">else</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> ENVIRONMENT_32</span><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br><br><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">_SYSTEM_INFORMATION_CLASS</span> &#123;<br>    SystemBasicInformation,<br>    SystemProcessorInformation,<br>    SystemPerformanceInformation,<br>    SystemTimeOfDayInformation,<br>    SystemPathInformation,<br>    SystemProcessInformation,<br>    SystemCallCountInformation,<br>    SystemDeviceInformation,<br>    SystemProcessorPerformanceInformation,<br>    SystemFlagsInformation,<br>    SystemCallTimeInformation,<br>    SystemModuleInformation,<br>    SystemLocksInformation,<br>    SystemStackTraceInformation,<br>    SystemPagedPoolInformation,<br>    SystemNonPagedPoolInformation,<br>    SystemHandleInformation,<br>    SystemObjectInformation,<br>    SystemPageFileInformation,<br>    SystemVdmInstemulInformation,<br>    SystemVdmBopInformation,<br>    SystemFileCacheInformation,<br>    SystemPoolTagInformation,<br>    SystemInterruptInformation,<br>    SystemDpcBehaviorInformation,<br>    SystemFullMemoryInformation,<br>    SystemLoadGdiDriverInformation,<br>    SystemUnloadGdiDriverInformation,<br>    SystemTimeAdjustmentInformation,<br>    SystemSummaryMemoryInformation,<br>    SystemNextEventIdInformation,<br>    SystemEventIdsInformation,<br>    SystemCrashDumpInformation,<br>    SystemExceptionInformation,<br>    SystemCrashDumpStateInformation,<br>    SystemKernelDebuggerInformation,<br>    SystemContextSwitchInformation,<br>    SystemRegistryQuotaInformation,<br>    SystemExtendServiceTableInformation,<br>    SystemPrioritySeperation,<br>    SystemPlugPlayBusInformation,<br>    SystemDockInformation,<br>    SystemProcessorSpeedInformation,<br>    SystemCurrentTimeZoneInformation,<br>    SystemLookasideInformation<br>&#125; SYSTEM_INFORMATION_CLASS;<br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> NT_SUCCESS(StatCode)  ((NTSTATUS)(StatCode) &gt;= 0)</span><br><br><br><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">UNICODE_STRING</span> &#123;<br>    USHORT Length;<br>    USHORT MaximumLength;<br>    PWSTR  Buffer;<br>&#125; UNICODE_STRING, * PUNICODE_STRING;<br><br><span class="hljs-keyword">typedef</span> LONG KPRIORITY;<br><br><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_SYSTEM_PROCESS_INFORMATION</span><br>&#123;<br>    ULONG NextEntryOffset;<br>    ULONG NumberOfThreads;<br>    LARGE_INTEGER WorkingSetPrivateSize; <span class="hljs-comment">//VISTA</span><br>    ULONG HardFaultCount; <span class="hljs-comment">//WIN7</span><br>    ULONG NumberOfThreadsHighWatermark; <span class="hljs-comment">//WIN7</span><br>    ULONGLONG CycleTime; <span class="hljs-comment">//WIN7</span><br>    LARGE_INTEGER CreateTime;<br>    LARGE_INTEGER UserTime;<br>    LARGE_INTEGER KernelTime;<br>    UNICODE_STRING ImageName;<br>    KPRIORITY BasePriority;<br>    HANDLE UniqueProcessId;<br>    HANDLE InheritedFromUniqueProcessId;<br>    ULONG HandleCount;<br>    ULONG SessionId;<br>    ULONG_PTR PageDirectoryBase;<br><span class="hljs-comment">//</span><br><span class="hljs-comment">// This part corresponds to VM_COUNTERS_EX.</span><br><span class="hljs-comment">// <span class="hljs-doctag">NOTE:</span> *NOT* THE SAME AS VM_COUNTERS!</span><br><span class="hljs-comment">//</span><br>SIZE_T PeakVirtualSize;<br>SIZE_T VirtualSize;<br>ULONG PageFaultCount;<br>SIZE_T PeakWorkingSetSize;<br>SIZE_T WorkingSetSize;<br>SIZE_T QuotaPeakPagedPoolUsage;<br>SIZE_T QuotaPagedPoolUsage;<br>SIZE_T QuotaPeakNonPagedPoolUsage;<br>SIZE_T QuotaNonPagedPoolUsage;<br>SIZE_T PagefileUsage;<br>SIZE_T PeakPagefileUsage;<br>SIZE_T PrivatePageCount;<br><br><span class="hljs-comment">//</span><br><span class="hljs-comment">// This part corresponds to IO_COUNTERS</span><br><span class="hljs-comment">//</span><br>LARGE_INTEGER ReadOperationCount;<br>LARGE_INTEGER WriteOperationCount;<br>LARGE_INTEGER OtherOperationCount;<br>LARGE_INTEGER ReadTransferCount;<br>LARGE_INTEGER WriteTransferCount;<br>LARGE_INTEGER OtherTransferCount;<br><span class="hljs-comment">//    SYSTEM_THREAD_INFORMATION TH[1];</span><br>&#125; SYSTEM_PROCESS_INFORMATION, * PSYSTEM_PROCESS_INFORMATION;<br><br><br><span class="hljs-comment">//定义的函数指针</span><br><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">NTSTATUS</span><span class="hljs-params">(_stdcall *LPFN_NTQUERYSYSTEMINFORMATIONORIGINALDEF)</span><span class="hljs-params">(SYSTEM_INFORMATION_CLASS </span></span><br><span class="hljs-params"><span class="hljs-function">    SystemInformationClass, PVOID SystemInformation, SIZE_T SystemInformationLength, PSIZE_T ReturnLength)</span></span>;<br><br><br><span class="hljs-function">NTSTATUS _stdcall <span class="hljs-title">FakeNtQuerySystemInformation</span><span class="hljs-params">(SYSTEM_INFORMATION_CLASS SystemInformationClass,</span></span><br><span class="hljs-params"><span class="hljs-function">    PVOID SystemInformation, SIZE_T SystemInformationLength, PSIZE_T ReturnLength)</span></span>;<br><br><span class="hljs-function">PVOID <span class="hljs-title">Allocate2GBRange</span><span class="hljs-params">(UINT_PTR VirtualAddress, SIZE_T ViewSize)</span></span>;<br><br><br><br><span class="hljs-meta">#<span class="hljs-keyword">if</span> defined(ENVIRONMENT_32)</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">InstallInlineHook_x86</span><span class="hljs-params">()</span></span>;<br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">if</span> defined(ENVIRONMENT_64)</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">InstallInlineHook_x64</span><span class="hljs-params">()</span></span>;<br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br></code></pre></td></tr></table></figure>
+
+
+<p>2)DllMain.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;DllMain.h&quot;</span></span><br><br>LPFN_NTQUERYSYSTEMINFORMATIONORIGINALDEF __WhiteListAddrss; <span class="hljs-comment">//白名单地址</span><br><br><br><span class="hljs-function">BOOL WINAPI <span class="hljs-title">DllMain</span><span class="hljs-params">(HINSTANCE hModule, DWORD ul_reason_for_call, LPVOID lpvReserved)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">switch</span> (ul_reason_for_call)<br>    &#123;<br>	<span class="hljs-keyword">case</span> DLL_PROCESS_ATTACH:<br>	&#123;<br><br>		HMODULE ModuleHandle = <span class="hljs-built_in">GetModuleHandle</span>(_T(<span class="hljs-string">&quot;ntdll.dll&quot;</span>));<br>		LPVOID OriginalAddress = <span class="hljs-built_in">GetProcAddress</span>(ModuleHandle, <span class="hljs-string">&quot;NtQuerySystemInformation&quot;</span>);<br>		TCHAR BufferData[<span class="hljs-number">0x1000</span>] = &#123; <span class="hljs-number">0</span> &#125;;<br>		_stprintf(BufferData, _T(<span class="hljs-string">&quot;0x%p&quot;</span>), OriginalAddress);<br><br>		<span class="hljs-built_in">MessageBox</span>(<span class="hljs-literal">NULL</span>, BufferData, _T(<span class="hljs-string">&quot;DLL_PROCESS_ATTACH&quot;</span>), <span class="hljs-literal">NULL</span>);<br><span class="hljs-meta">#<span class="hljs-keyword">if</span> defined(ENVIRONMENT_32)</span><br>		<span class="hljs-built_in">InstallInlineHook_x86</span>();<br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">if</span> defined(ENVIRONMENT_64)</span><br>		<span class="hljs-built_in">InstallInlineHook_x64</span>();<br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br>		<span class="hljs-keyword">break</span>;<br>	&#125;<br>	<span class="hljs-keyword">case</span> DLL_THREAD_ATTACH:<br>	<span class="hljs-keyword">case</span> DLL_THREAD_DETACH:<br>	<span class="hljs-keyword">case</span> DLL_PROCESS_DETACH:<br>	&#123;<br><br>	<span class="hljs-comment">//指令恢复</span><br><br>	&#125;<br>		<span class="hljs-keyword">break</span>;<br><br>	&#125;<br><br>	<span class="hljs-keyword">return</span> TRUE;<br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">InstallInlineHook_x86</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	BYTE v1[<span class="hljs-number">10</span>] = &#123; <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0xE9</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span> &#125;;   <span class="hljs-comment">//ShellCode  </span><br>	BYTE v2[<span class="hljs-number">5</span>] = &#123; <span class="hljs-number">0xE9</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span> &#125;;     <span class="hljs-comment">//覆盖源函数的前5个字节指令</span><br>    HMODULE ModuleHandle = <span class="hljs-built_in">GetModuleHandle</span>(_T(<span class="hljs-string">&quot;ntdll.dll&quot;</span>));<br>	LPVOID OriginalAddress = <span class="hljs-built_in">GetProcAddress</span>(ModuleHandle, <span class="hljs-string">&quot;NtQuerySystemInformation&quot;</span>);<br><br>	LPVOID TrampolineAddress = <span class="hljs-built_in">VirtualAlloc</span>(<span class="hljs-literal">NULL</span>, <span class="hljs-number">10</span>, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);<br><br>	<span class="hljs-built_in">memcpy</span>(v1, OriginalAddress, <span class="hljs-number">5</span>);<br>    <span class="hljs-comment">// Offset = OriginalAddress + 5 - TrampolineAddress + 5 - 5</span><br><br>	*(DWORD*)(v1 + <span class="hljs-number">6</span>) = (DWORD)OriginalAddress - (DWORD)TrampolineAddress - <span class="hljs-number">5</span>;  <span class="hljs-comment">//仔细审题</span><br><br>	<span class="hljs-built_in">memcpy</span>(TrampolineAddress, v1, <span class="hljs-number">10</span>);<br><br>	__WhiteListAddrss = 			(LPFN_NTQUERYSYSTEMINFORMATIONORIGINALDEF)TrampolineAddress;<br><br>	*(DWORD*)&amp;v2[<span class="hljs-number">1</span>] = (DWORD)FakeNtQuerySystemInformation - 	(DWORD)OriginalAddress - <span class="hljs-number">5</span>;<br><br>	<span class="hljs-comment">//将v2中的字节指令覆盖到源函数前5个字节处</span><br>	BOOL IsOk = <span class="hljs-built_in">WriteProcessMemory</span>(<span class="hljs-built_in">GetCurrentProcess</span>(), OriginalAddress, v2, <span class="hljs-built_in">sizeof</span>(v2), <span class="hljs-literal">NULL</span>);<br>    &#125;<br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">InstallInlineHook_x64</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-comment">//e9 Offset(4Bytes)</span><br>	<span class="hljs-comment">//FF 25 0 0 0 0 绝对地址</span><br>	BYTE v1[<span class="hljs-number">14</span>] = &#123; <span class="hljs-number">0xFF</span>, <span class="hljs-number">0x25</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span> &#125;;    <span class="hljs-comment">//2 + 4 + 8   跳转至Fake函数</span><br>	BYTE v2[<span class="hljs-number">13</span>] = &#123; <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0xE9</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span> &#125;;          <span class="hljs-comment">//中间有3个零注意 是由于该函数内部存在 特定问题特殊分析</span><br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">0:023&gt; u ZwQuerySystemInformation</span><br><span class="hljs-comment">ntdll!ZwQuerySystemInformation:</span><br><span class="hljs-comment">00007ffb`b29cd770 4c8bd1          mov     r10,rcx</span><br><span class="hljs-comment">00007ffb`b29cd773 b836000000      mov     eax,36h    //中间有3个零注意</span><br><span class="hljs-comment">	*/</span><br>    BYTE v3[<span class="hljs-number">5</span>] = &#123; <span class="hljs-number">0xE9</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span> &#125;;<br><br>	HMODULE ModuleHandle = <span class="hljs-built_in">GetModuleHandle</span>(_T(<span class="hljs-string">&quot;ntdll.dll&quot;</span>));<br>	LPVOID OriginalAddress = <span class="hljs-built_in">GetProcAddress</span>(ModuleHandle, <span class="hljs-string">&quot;NtQuerySystemInformation&quot;</span>);<br><br>	LPVOID TrampolineAddress = <span class="hljs-built_in">Allocate2GBRange</span>((ULONG_PTR)OriginalAddress, <span class="hljs-number">27</span>); <span class="hljs-comment">//跳板地址</span><br><br>	*(__int64*)&amp;v1[<span class="hljs-number">6</span>] = (__int64)FakeNtQuerySystemInformation;  <br><span class="hljs-built_in">memcpy</span>(TrampolineAddress, v1, <span class="hljs-number">14</span>);<br>    <span class="hljs-built_in">memcpy</span>(v2, OriginalAddress, <span class="hljs-number">5</span>);<br>    <span class="hljs-comment">//TrampolineAddress + 15 + 5 + 5  + Offset  = OriginalAddress + 5</span><br><br>	*(DWORD*)(v2 + <span class="hljs-number">9</span>) = (DWORD)OriginalAddress - <span class="hljs-number">15</span> - 	(DWORD)TrampolineAddress - <span class="hljs-number">5</span>;<br><span class="hljs-built_in">memcpy</span>((LPVOID)((__int64)TrampolineAddress + <span class="hljs-number">15</span>), v2, <span class="hljs-number">13</span>);<br><br>	__WhiteListAddrss = (LPFN_NTQUERYSYSTEMINFORMATIONORIGINALDEF)	((__int64)TrampolineAddress + (__int64)<span class="hljs-number">15</span>);<br>	<br>	*(DWORD*)&amp;v3[<span class="hljs-number">1</span>] = (DWORD)TrampolineAddress - (DWORD)OriginalAddress - <span class="hljs-number">5</span>;<br>    BOOL IsOk = <span class="hljs-built_in">WriteProcessMemory</span>(<span class="hljs-built_in">GetCurrentProcess</span>(), OriginalAddress, v3, <span class="hljs-built_in">sizeof</span>(v3), <span class="hljs-literal">NULL</span>);<br>    &#125;<br><span class="hljs-function">PVOID <span class="hljs-title">Allocate2GBRange</span><span class="hljs-params">(UINT_PTR VirtualAddress, SIZE_T ViewSize)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-type">static</span> ULONG AllocationGranularity;<br>    <span class="hljs-keyword">if</span> (!AllocationGranularity)<br>&#123;<br>	SYSTEM_INFO SystemInfo;<br>	<span class="hljs-built_in">GetSystemInfo</span>(&amp;SystemInfo);<br>	AllocationGranularity = SystemInfo.dwAllocationGranularity;<br>&#125;<br><br>	UINT_PTR Min, Max, v1, v2 = AllocationGranularity - <span class="hljs-number">1</span>, Mask = ~v2;<br><br>	Min = VirtualAddress &gt;= <span class="hljs-number">0x80000000</span> ? (VirtualAddress - <span class="hljs-number">0x80000000</span> + v2) &amp; Mask : <span class="hljs-number">0</span>;<br>	Max = VirtualAddress &lt; (UINTPTR_MAX - <span class="hljs-number">0x80000000</span>) ? (VirtualAddress + <span class="hljs-number">0x80000000</span>) &amp; Mask : UINTPTR_MAX;<br><br>	MEMORY_BASIC_INFORMATION MemoryBasicInfo;<br>	<span class="hljs-keyword">do</span><br>	&#123;<br>		<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">VirtualQuery</span>((<span class="hljs-type">void</span>*)Min, &amp;MemoryBasicInfo, <span class="hljs-built_in">sizeof</span>(MemoryBasicInfo))) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;<br><br>		Min = (UINT_PTR)MemoryBasicInfo.BaseAddress + MemoryBasicInfo.RegionSize;<br><br>		<span class="hljs-keyword">if</span> (MemoryBasicInfo.State == MEM_FREE)<br>		&#123;<br>		v1 = ((UINT_PTR)MemoryBasicInfo.BaseAddress + v2) &amp; Mask;<br><br>			<span class="hljs-keyword">if</span> (v1 &lt; Min &amp;&amp; ViewSize &lt;= (Min - v1))<br>			&#123;<br>				<span class="hljs-keyword">if</span> (v1 = (UINT_PTR)<span class="hljs-built_in">VirtualAlloc</span>((PVOID)v1, ViewSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE))<br>					<span class="hljs-keyword">return</span> (PVOID)v1;<br>			&#125;<br>		&#125;<br>    &#125; <span class="hljs-keyword">while</span> (Min &lt; Max);<br><br><span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;<br><br>&#125;<br><br><span class="hljs-function">NTSTATUS _stdcall <span class="hljs-title">FakeNtQuerySystemInformation</span><span class="hljs-params">(SYSTEM_INFORMATION_CLASS SystemInformationClass, PVOID SystemInformation, SIZE_T SystemInformationLength, PSIZE_T ReturnLength)</span></span><br><span class="hljs-function"></span>&#123;<br>	NTSTATUS Status;<br>	PSYSTEM_PROCESS_INFORMATION v1 = <span class="hljs-literal">NULL</span>; <br>	PSYSTEM_PROCESS_INFORMATION v2 = <span class="hljs-literal">NULL</span>;<br><br><span class="hljs-comment">//先调用源函数获取枚举信息</span><br>	Status = __WhiteListAddrss(SystemInformationClass, 	SystemInformation, SystemInformationLength, ReturnLength);<br><br>	<span class="hljs-keyword">if</span> (<span class="hljs-built_in">NT_SUCCESS</span>(Status) &amp;&amp; SystemInformationClass == 	SystemProcessInformation)  <span class="hljs-comment">//判读是否是由于枚举进程信息了</span><br>	&#123;<br>    <br>		v1 = (PSYSTEM_PROCESS_INFORMATION)SystemInformation;   <span class="hljs-comment">//枚举到的信息在该成员中</span><br>		v2 = (PSYSTEM_PROCESS_INFORMATION)((PBYTE)v1 + v1-&gt;NextEntryOffset);<br><br>		<span class="hljs-keyword">while</span> (v2-&gt;NextEntryOffset != <span class="hljs-number">0</span>)<br>		&#123;<br>			<span class="hljs-keyword">if</span> (<span class="hljs-built_in">lstrcmpW</span>((&amp;v2-&gt;ImageName)-&gt;Buffer, <span class="hljs-string">L&quot;explorer.exe&quot;</span>) == <span class="hljs-number">0</span>)<br>			&#123;<br>				v1-&gt;NextEntryOffset += v2-&gt;NextEntryOffset;<br>			&#125;<br>			v1 = v2;<br>			v2 = (PSYSTEM_PROCESS_INFORMATION)((PBYTE)v1 + v1-&gt;NextEntryOffset);<br>		&#125;<br>	&#125;<br><br><span class="hljs-comment">//放行数据</span><br>	<span class="hljs-keyword">return</span> Status;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+<p>2.HideProcess<br>1)_tmain.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> once</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;Windows.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;tchar.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;tlhelp32.h&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function">BOOL <span class="hljs-title">SeEnableSeDebugPrivilege</span><span class="hljs-params">(IN <span class="hljs-type">const</span> TCHAR* PriviledgeName, BOOL IsEnable)</span></span>;<br><span class="hljs-function">BOOL <span class="hljs-title">SeInjectDll</span><span class="hljs-params">(DWORD ProcessIdentify, LPCTSTR DllPath)</span></span>;<br><span class="hljs-function">BOOL <span class="hljs-title">SeEjectDll</span><span class="hljs-params">(DWORD ProcessIdentify, LPCTSTR DllPath)</span></span>;<br><span class="hljs-function">BOOL <span class="hljs-title">SeGetProcessIdentify</span><span class="hljs-params">(HANDLE* ProcessIdentify,</span></span><br><span class="hljs-params"><span class="hljs-function">	ULONG_PTR ProcessIdentifyLength, <span class="hljs-type">const</span> TCHAR* ImageName, ULONG_PTR ImageNameLength)</span></span>;<br><br><span class="hljs-number">2</span>)_tmain.cpp<br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;_tmain.h&quot;</span></span><br><br><br><span class="hljs-type">int</span> _tmain(<span class="hljs-type">int</span> argc, TCHAR* argv[])<br>&#123;<br><br>	<span class="hljs-built_in">SeEnableSeDebugPrivilege</span>(SE_DEBUG_NAME, TRUE);<br><br>	HANDLE ProcessIdentify = <span class="hljs-number">0</span>;<br><br>	TCHAR ImageName[MAX_PATH] = &#123; _T(<span class="hljs-string">&quot;Taskmgr.exe&quot;</span>) &#125;;<br><br>	<span class="hljs-built_in">SeGetProcessIdentify</span>((PHANDLE)&amp;ProcessIdentify, <span class="hljs-built_in">sizeof</span>(HANDLE),<br>	ImageName, MAX_PATH * <span class="hljs-built_in">sizeof</span>(TCHAR));<br><br>	TCHAR DllFullPath[MAX_PATH] = &#123; <span class="hljs-number">0</span> &#125;;<br>	<span class="hljs-built_in">GetCurrentDirectory</span>(MAX_PATH, DllFullPath);<br><br>	_tcscat_s(DllFullPath, _T(<span class="hljs-string">&quot;\\Dll.dll&quot;</span>));<br><br>	<span class="hljs-built_in">SeInjectDll</span>((DWORD)ProcessIdentify, DllFullPath);<br><br>	_tprintf(_T(<span class="hljs-string">&quot;Input AnyKey To Exit\r\n&quot;</span>));<br>	_gettchar();<br>	<span class="hljs-built_in">SeEjectDll</span>((DWORD)ProcessIdentify, DllFullPath);<br><br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-function">BOOL <span class="hljs-title">SeEnableSeDebugPrivilege</span><span class="hljs-params">(IN <span class="hljs-type">const</span> TCHAR* PriviledgeName, BOOL IsEnable)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-comment">// 打开权限令牌</span><br>	HANDLE  ProcessHandle = <span class="hljs-built_in">GetCurrentProcess</span>();<br>	HANDLE  TokenHandle = <span class="hljs-literal">NULL</span>;<br>	TOKEN_PRIVILEGES TokenPrivileges = &#123; <span class="hljs-number">0</span> &#125;;<br>	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">OpenProcessToken</span>(ProcessHandle, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &amp;TokenHandle))<br>	&#123;<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br>	LUOID  v1;<br>	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">LookupPrivilegeValue</span>(<span class="hljs-literal">NULL</span>, PriviledgeName, &amp;v1))<br>	&#123;<br>		<span class="hljs-built_in">CloseHandle</span>(TokenHandle);<br>		TokenHandle = <span class="hljs-literal">NULL</span>;<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br><br>	TokenPrivileges.PrivilegeCount = <span class="hljs-number">1</span>;<br>	TokenPrivileges.Privileges[<span class="hljs-number">0</span>].Attributes = IsEnable == TRUE ? 	SE_PRIVILEGE_ENABLED : <span class="hljs-number">0</span>;<br>	TokenPrivileges.Privileges[<span class="hljs-number">0</span>].Luid = v1;<br><br>	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">AdjustTokenPrivileges</span>(TokenHandle, FALSE, &amp;TokenPrivileges,<br>	<span class="hljs-built_in">sizeof</span>(TOKEN_PRIVILEGES), <span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>))<br>	&#123;<br>		_tprintf(_T(<span class="hljs-string">&quot;LastError:%d\r\n&quot;</span>), <span class="hljs-built_in">GetLastError</span>());<br>		<span class="hljs-built_in">CloseHandle</span>(TokenHandle);<br>		TokenHandle = <span class="hljs-literal">NULL</span>;<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br>	<span class="hljs-built_in">CloseHandle</span>(TokenHandle);<br>	TokenHandle = <span class="hljs-literal">NULL</span>;<br>	<span class="hljs-keyword">return</span> TRUE;<br><br>&#125;<br><span class="hljs-function">BOOL <span class="hljs-title">SeInjectDll</span><span class="hljs-params">(DWORD ProcessIdentify, LPCTSTR DllPath)</span></span><br><span class="hljs-function"></span>&#123;<br>	HANDLE ProcessHandle, ThreadHandle;<br>	LPVOID VirtualAddress;<br>	DWORD ViewSize = (DWORD)(_tcslen(DllPath) + <span class="hljs-number">1</span>) * <span class="hljs-built_in">sizeof</span>(TCHAR);<br>	LPTHREAD_START_ROUTINE ThreadStartRoutine = <span class="hljs-literal">NULL</span>;<br><br>	<span class="hljs-keyword">if</span> (!(ProcessHandle = <span class="hljs-built_in">OpenProcess</span>(PROCESS_ALL_ACCESS, FALSE, 	ProcessIdentify)))<br>	&#123;<br>		DWORD LastError = <span class="hljs-built_in">GetLastError</span>();<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br><br>	VirtualAddress = <span class="hljs-built_in">VirtualAllocEx</span>(ProcessHandle, <span class="hljs-literal">NULL</span>, ViewSize, 		MEM_COMMIT, PAGE_READWRITE);<br><br>	<span class="hljs-built_in">WriteProcessMemory</span>(ProcessHandle, VirtualAddress, (LPVOID)DllPath, ViewSize, <span class="hljs-literal">NULL</span>);<br><br>	ThreadStartRoutine = (LPTHREAD_START_ROUTINE)<span class="hljs-built_in">GetProcAddress</span>(<span class="hljs-built_in">GetModuleHandle</span>(_T(<span class="hljs-string">&quot;kernel32.dll&quot;</span>)), <span class="hljs-string">&quot;LoadLibraryW&quot;</span>);<br><br>	ThreadHandle = <span class="hljs-built_in">CreateRemoteThread</span>(ProcessHandle, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, 	ThreadStartRoutine, VirtualAddress, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);<br><br>	<span class="hljs-built_in">WaitForSingleObject</span>(ThreadHandle, INFINITE);<br><br>	<span class="hljs-built_in">CloseHandle</span>(ThreadHandle);<br><br>	<span class="hljs-built_in">CloseHandle</span>(ProcessHandle);<br><br>	<span class="hljs-keyword">return</span> TRUE;<br>&#125;<br><span class="hljs-function">BOOL <span class="hljs-title">SeEjectDll</span><span class="hljs-params">(DWORD ProcessIdentify, LPCTSTR DllPath)</span></span><br><span class="hljs-function"></span>&#123;<br>	BOOL IsOk = FALSE, IsFound = FALSE;<br>	HANDLE SnapshotHandle, ProcessHandle, ThreadHandle;<br>	MODULEENTRY32 ModuleEntry32 = &#123; <span class="hljs-built_in">sizeof</span>(ModuleEntry32) &#125;;<br>	LPTHREAD_START_ROUTINE ThreadStartRoutine = <span class="hljs-literal">NULL</span>;<br><br>	<span class="hljs-keyword">if</span> (INVALID_HANDLE_VALUE == (SnapshotHandle = <span class="hljs-built_in">CreateToolhelp32Snapshot</span>(TH32CS_SNAPMODULE, ProcessIdentify)))<br>		<span class="hljs-keyword">return</span> FALSE;<br><br>	IsOk = <span class="hljs-built_in">Module32First</span>(SnapshotHandle, &amp;ModuleEntry32);<br>	<span class="hljs-keyword">for</span> (; IsOk; IsOk = <span class="hljs-built_in">Module32Next</span>(SnapshotHandle, &amp;ModuleEntry32))<br>	&#123;<br>		<span class="hljs-keyword">if</span> (!_tcsicmp(ModuleEntry32.szModule, DllPath) || 	!_tcsicmp(ModuleEntry32.szExePath, DllPath))<br>		&#123;<br>			IsFound = TRUE;<br>			<span class="hljs-keyword">break</span>;<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-keyword">if</span> (!IsFound)<br>	&#123;<br>		<span class="hljs-built_in">CloseHandle</span>(SnapshotHandle);<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br><br>	<span class="hljs-keyword">if</span> (!(ProcessHandle = <span class="hljs-built_in">OpenProcess</span>(PROCESS_ALL_ACCESS, FALSE, ProcessIdentify)))<br>	&#123;<br>		<span class="hljs-built_in">CloseHandle</span>(SnapshotHandle);<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br><br>	ThreadStartRoutine = (LPTHREAD_START_ROUTINE)<span class="hljs-built_in">GetProcAddress</span>(<span class="hljs-built_in">GetModuleHandle</span>(_T(<span class="hljs-string">&quot;kernel32.dll&quot;</span>)), <span class="hljs-string">&quot;FreeLibrary&quot;</span>);<br><br>	ThreadHandle = <span class="hljs-built_in">CreateRemoteThread</span>(ProcessHandle, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, 		ThreadStartRoutine, ModuleEntry32.modBaseAddr, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);<br><br>	<span class="hljs-built_in">WaitForSingleObject</span>(ThreadHandle, INFINITE);<br><br>	<span class="hljs-built_in">CloseHandle</span>(ThreadHandle);<br>	<span class="hljs-built_in">CloseHandle</span>(ProcessHandle);<br>	<span class="hljs-built_in">CloseHandle</span>(SnapshotHandle);<br><br>	<span class="hljs-keyword">return</span> TRUE;<br><br>&#125;<br><span class="hljs-function">BOOL <span class="hljs-title">SeGetProcessIdentify</span><span class="hljs-params">(HANDLE* ProcessIdentify,</span></span><br><span class="hljs-params"><span class="hljs-function">	ULONG_PTR ProcessIdentifyLength, <span class="hljs-type">const</span> TCHAR* ImageName, ULONG_PTR ImageNameLength)</span></span><br><span class="hljs-function"></span>&#123;<br>	BOOL IsOk = FALSE;<br>	HANDLE SnapshotHandle = INVALID_HANDLE_VALUE;<br>	PROCESSENTRY32 ProcessEntry32;<br>	ProcessEntry32.dwSize = <span class="hljs-built_in">sizeof</span>(PROCESSENTRY32);<br>	<span class="hljs-type">int</span> LastError = <span class="hljs-number">0</span>;<br>	<span class="hljs-keyword">if</span> (<span class="hljs-built_in">IsBadWritePtr</span>(ProcessIdentify, ProcessIdentifyLength) ||<br>		<span class="hljs-built_in">IsBadReadPtr</span>(ImageName, ImageNameLength))<br>	&#123;<br><br>	LastError = ERROR_INVALID_PARAMETER;<br>	<span class="hljs-keyword">goto</span> Exit;<br>&#125;<br>SnapshotHandle = <span class="hljs-built_in">CreateToolhelp32Snapshot</span>(TH32CS_SNAPPROCESS, <span class="hljs-number">0</span>);<br><span class="hljs-keyword">if</span> (SnapshotHandle == INVALID_HANDLE_VALUE)<br>&#123;<br>	LastError = <span class="hljs-built_in">GetLastError</span>();<br>	<span class="hljs-keyword">return</span> FALSE;<br>&#125;<br><br><span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Process32First</span>(SnapshotHandle, &amp;ProcessEntry32))<br>&#123;<br><br>	LastError = <span class="hljs-built_in">GetLastError</span>();<br>	<span class="hljs-keyword">goto</span> Exit;<br>&#125;<br><br><span class="hljs-keyword">do</span><br>&#123;<br><br>	<span class="hljs-keyword">if</span> (_tcsicmp(ProcessEntry32.szExeFile, ImageName) == <span class="hljs-number">0</span>)<br>	&#123;<br><br>		*ProcessIdentify = (HANDLE)ProcessEntry32.th32ProcessID;<br>		IsOk = TRUE;<br>		<span class="hljs-keyword">goto</span> Exit;<br>	&#125;<br><br>&#125; <span class="hljs-keyword">while</span> (<span class="hljs-built_in">Process32Next</span>(SnapshotHandle, &amp;ProcessEntry32));<br><br><br><br>LastError = ERROR_MOD_NOT_FOUND;<br><br>Exit:<br><br>	<span class="hljs-keyword">if</span> (SnapshotHandle != INVALID_HANDLE_VALUE)<br>	&#123;<br>		<span class="hljs-built_in">CloseHandle</span>(SnapshotHandle);<br>	&#125;<br>	SnapshotHandle = INVALID_HANDLE_VALUE;<br>	<span class="hljs-built_in">SetLastError</span>(LastError);<br>	<span class="hljs-keyword">return</span> IsOk;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/project/categories/HOOK%E9%9B%86%E5%90%88/" class="category-chain-item">HOOK集合</a>
+  
+  
+    <span>></span>
+    
+  <a href="/project/categories/HOOK%E9%9B%86%E5%90%88/Demo/" class="category-chain-item">Demo</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/project/tags/HOOK/">#HOOK</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>HideProcess</div>
+      <div>https://wlpswmt.github.io/project/2023/01/26/HideProcess/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Sivan Zhang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年1月26日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/project/2023/01/29/HookDbg/" title="HookDbg">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">HookDbg</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/project/2023/01/26/%E9%94%AE%E7%9B%98%E8%BF%87%E6%BB%A4/" title="键盘过滤">
+                        <span class="hidden-mobile">键盘过滤</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/project/js/events.js" ></script>
+<script  src="/project/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/project/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/project/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/project/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/project/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"/project/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":250,"height":400},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+<!--������ʾ����-->
+<script type="text/javascript" src="/js/click_show_text.js"></script>
+<!--�������Ц����-->
+<script type="text/javascript" src="/js/FunnyTitle.js"></script>
+<!--��̬��������-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.9' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+

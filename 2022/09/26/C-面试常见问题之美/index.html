@@ -1,0 +1,857 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/project/img/cutegirl.png">
+  <link rel="icon" href="/project/img/cutegirl.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Sivan Zhang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="包含一些常见的C++面试题 个人用于复习使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++面试常见问题之美（转载）">
+<meta property="og:url" content="https://wlpswmt.github.io/project/2022/09/26/C-%E9%9D%A2%E8%AF%95%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B9%8B%E7%BE%8E/index.html">
+<meta property="og:site_name" content="Silence">
+<meta property="og:description" content="包含一些常见的C++面试题 个人用于复习使用">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-09-26T10:15:43.000Z">
+<meta property="article:modified_time" content="2023-03-17T11:35:02.459Z">
+<meta property="article:author" content="Sivan Zhang">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>C++面试常见问题之美（转载） - Silence</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/project/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/project/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/project/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"wlpswmt.github.io","root":"/project/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/project/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/project/js/utils.js" ></script>
+  <script  src="/project/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/project/">
+      <strong>幽客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/project/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="C++面试常见问题之美（转载）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Sivan Zhang
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-26 18:15" pubdate>
+          2022年9月26日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          13k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          162 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">C++面试常见问题之美（转载）</h1>
+            
+              <p class="note note-primary">
+                
+                  
+                    本文最后更新于：1 年前
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p>包含一些常见的C++面试题 个人用于复习使用</p>
+<span id="more"></span>
+
+<p>目录</p>
+<p>问答题<br>        1. 比较值传递和引用传递的相同点和不同点。<br>        2 什么叫内联函数?它有哪些特点？<br>        3 什么叫复制构造函数？复制构造函数何时被调用？<br>        4 复制构造函数与赋值运算符（=）有何不同？<br>        5 什么叫作用域？有哪几种类型的作用域？<br>        6 什么叫做可见性？可见性的一般规则是什么？<br>        7 什么叫静态数据成员？他有何特点？<br>        8 什么叫静态函数成员？他有何特点？<br>        9 什么叫友元函数？什么叫友元类？<br>        10 在函数内部定义的普通局部变量和静态局部变量在功能上有何不同？计算机底层对这两类变量做了怎样的不同处理导致了这种差异？<br>        11 引用和指针有何区别？何时只能使用指针而不能使用引用？<br>        12 比较类的 3 种继承方式之间的差别？<br>        13 什么叫虚基类？有何作用？<br>        14 组合与继承有什么共同点和差异？通过组合生成的类与被组合的类之间的逻辑关系是什 么？继承呢？<br>        15 基类与派生类的对象，指针或引用之间，哪些情况下可以隐含转换，哪些情况下可以显 示转换？在涉及多重继承或虚继承的情况下，在转换时会面临哪些新问题？<br>        16 什么叫做多态性？在 C++种是如何实现多态的？<br>        17 什么叫抽象类？抽象类有何作用？抽象类的派生类是否一定要给出纯虚函数的实现？<br>        18 在 C++中，能否声明虚构造函数？为什么？能否声明虚析构函数？有何用途？<br>        19 什么叫做流？流的提取和插入是指什么？I/O 流在 C++中起着怎样的作用？<br>        20 什么叫做异常？什么叫做异常处理？<br>        21 C++的异常处理机制有何优点？<br>        22 比较函数重载和虚函数在概念和使用方式方面有什么区别？<br>        23 比较 class 和 struct 结构体的异同<br>        24 浅拷贝和深拷贝的区别？<br>        25 const 和 static 作用 const 作用：<br>        26 析构函数带 virtual 和 不带 virtual 的区别<br>        27 重写，重载和隐藏的区别？<br>        28 C++中的四个默认的函数<br>        29 不可以被重载的运算符–五个<br>        30 三种字符数组初始化的方法<br>        31 哪些操作符必须重载为成员函数<br>        32 什么是“else 摇摆问题”，举例说明<br>        33 函数模板和函数重载的区别与联系<br>        34 怎样区别虚函数和纯虚函数？两者都有什么作用<br>        35 面向对象程序“接口与实现方法分离”，有什么作用（好处）<br>        36 列出所有与字符串处理有关的头文件<br>        37 C++中显示类型转换<br>        38 delete 和 delete [] 的区别？<br>        39 存储类别说明符可划分为两类。<br>        40 什么是运算符重载，它如何增强 C++的扩展性？<br>        41 为什么说”继承是 C++面向对象的主要特征之一”?请简要说明.？<br>        42 作用域辨析有哪些？<br>        43.STL 是什么？组成部分和区别。<br>        44 如何声明和使用虚函数。说明它在多态性中的作用和意义。<br>        44.什么是逻辑错误？什么是语法错误？请举例说明。<br>        45 编写语句说明枚举类型是如何定义和使用的。<br>        46 ADT是什么？简述你对“数据抽象”和“信息隐藏”的认识。<br>        47 简述你对“面向对象”和“面向过程”编程思想的理解和认识。<br>        50 写出递归函数定义以及相应的优缺点<br>        51 写出包含输入输出的标准库<br>        52 怎样区别虚函数和纯虚函数？两者都有什么作用</p>
+<h3 id="问答题"><a href="#问答题" class="headerlink" title="问答题"></a>问答题</h3><ol>
+<li>比较值传递和引用传递的相同点和不同点。<br>值传递是指当发生函数调用时，给形参分配内存空间，并用实参来初始化形参（直接将 实参的值传递给形参）。这一过程是参数值的单向传递过程，一旦形参获得了值便与实参脱 离关系，此后无论形参发生了怎样的改变，都不会影响到实参。<br>引用传递将引用作为形参，在执行主调函数中的调用语句时，系统自动用实参来初始化 形参。这样形参就成为实参的一个别名，对形参的任何操作也就直接作用于实参。</li>
+</ol>
+<p>2 什么叫内联函数?它有哪些特点？<br>定义时使用关键字 inline 的函数叫做内联函数；编译器在编译时在调用处用函数体进行替换,节省了参数传递、控制转移等开销；<br>内联函数体内不能有循环语句和 switch 语句；<br>内联函数的定义必须出现在内联函数第一次被调用之前；对内联函数不能进行异常接口声明；</p>
+<p>3 什么叫复制构造函数？复制构造函数何时被调用？<br>复制构造函数是一种特殊的构造函数，具有一般构造函数的所有特性，其形参是本类的 对象的引用 (const T &amp;)。其作用是使用一个已经存在的对象（由复制构造函数的参数指定），去初始化同类的一个新对象。<br>（1） 当用类的一个对象去初始化该类的另一个对象时；<br>（2） 如果函数的形参是类的对象，调用函数时进行形参和实参结合时；<br>（3） 如果函数的返回值是类的对象，函数执行完成返回调用者时。</p>
+<p>4 复制构造函数与赋值运算符（=）有何不同？<br>从概念上区分：复制构造函数是构造函数，而赋值操作符属于操作符重载范畴，它通常 是类的成员函数 从原型上来区分：<br>复制构造函数原型 ClassType(const ClassType &amp;);无返回值；<br>赋值操作符原型 ClassType&amp; operator=(const ClassType &amp;);返回值为 ClassType 的引用，便于连续赋 值操作 从使用的场合来区分：复制构造函数用于产生对象，它用于以下几个地方：函数参数为 类的值类型时、函数返回值为类类型时以及初始化语句</p>
+<p>5 什么叫作用域？有哪几种类型的作用域？<br>作用域讨论的是标识符的有效范围，作用域是一个标识符在程序正文中有效的区域。 C++的作用域分为：函数原型作用域、函数作用域、文件作用域(全局作用域)、块作用 域（局部作用域）、类作用域和名字空间作用域。</p>
+<p>6 什么叫做可见性？可见性的一般规则是什么？<br>可见性是标识符是否可以引用的问题； 可见性的一般规则是：标识符要声明在前，引用在后，在同一作用域中，不能声明同名 的标识符。对于在不同的作用域声明的标识符，遵循的原则是：若有两个或多个具有包含关 系的作用域，外层声明的标识符如果在内层没有声明同名标识符时仍可见，如果内层声明了 同名标识符则外层标识符不可见。</p>
+<p>7 什么叫静态数据成员？他有何特点？<br>类的静态数据成员是类的数据成员的一种特例，采用 static 关键字来声明。对于类的普<br>通数据成员，每一个类的对象都拥有一个拷贝，就是说每一个对象的同名数据成员可以分别存储不同的值，这也是保证对象拥有区别于其他对象的特征的需要，但是静态数据成员，每 个类只要一个拷贝，由所有该类的对象共同维护和使用，这个共同维护，使用也就实现了同一类的不同对象之间的数据共享。</p>
+<p>8 什么叫静态函数成员？他有何特点？<br>使用 static 关键字声明的函数成员是静态的，静态函数成员属于整个类，被同一个类的 所有对象共同维护，为这些所有对象共享。<br>静态成员函数具有以下两个方面的好处：<br>一是由于静态成员函数只能直接访问同一个类的静态数据成员，可以保证不会对该类的其余数据成员造成负面影响；<br>二是同一个类只维护一个静态函数成员的拷贝，节约了系统的开销，提高 程序的运行效率。</p>
+<p>9 什么叫友元函数？什么叫友元类？<br>友元函数是使用关键字 friend 关键字声明的函数，它可以访问相应类的保护成员和私 有成员。友元类是使用 friend 关键字声明的类，它的所有成员函数都是相应类的友元函数。<br>友元不可继承，没有传递性。</p>
+<p>10 在函数内部定义的普通局部变量和静态局部变量在功能上有何不同？计算机底层对这两类变量做了怎样的不同处理导致了这种差异？<br>局部作用域中静态变量的特点是：它并不会随着每次函数调用而产生一个副本，也不会 随着函数的返回而失效，定义时未指定初值的基本类型静态变量，会被以 0 值初始化；局部作用域的全部变量诞生于声明点，结束于声明所在的块执行完毕之时，并且不指定初值，意 味初值不确定。普通局部变量存放于栈区，超出作用域后，变量被撤销，其所占的内存也被 回收；静态局部变量存放于静态数据存储区，全局可见，但是作用域是局部作用域，超出作用域后变量仍然存在。</p>
+<p>11 引用和指针有何区别？何时只能使用指针而不能使用引用？<br>引用是一个别名，不能为 NULL 值，不能被重新分配；<br>指针是一个存放地址的变量。<br>当需要对变量重新赋以另外的地址或赋值为 NULL 时只能使用指针。<br>引用是一个变量的别名，本身不单独分配自己的内存空间，而指针有自己的内存空间。</p>
+<p>12 比较类的 3 种继承方式之间的差别？<br>公有继承，使得基类 public(公有)和 protected(保护)成员的访问属性在派生类中不变， 而基类 private(私有)成员不可访问。<br>私有继承，使得基类 public(公有)和 protected(保护)成员都以 private(私有)成员身份出 现在派生类中，而基类 private(私有)成员不可访问。<br>保护继承中，基类 public(公有)和 protected(保护)成员都以 protected(保护)成员身份出 现在派生类中，而基类 private(私有)成员不可访问。</p>
+<p>13 什么叫虚基类？有何作用？<br>当某类的部分或全部直接基类是从另一个基类派生而来，这些直接基类中，从上一级基类继承来的成员就拥有相同的名称，派生类的对象的这些同名成员在内存中同时拥有多 个拷贝，我们可以使用作用域分辨符来唯一标识并分别访问它们。<br>我们也可以将直接基类的共同基类设置为虚基类，这时从不同的路径继承过来的该类成员在内存中只拥有一个拷 贝，这样就解决了同名成员的唯一标识问题。<br>虚基类的声明是在派生类的定义过程，其语法格式为： class 派生类名：virtual 继承方式 基类名 上述语句声明基类为派生类的虚基类，在多继承情况下，虚基类关键字的作用范围和 继承方式关键字相同，只对紧跟其后的基类起作用。<br>声明了虚基类之后，虚基类的成员在 进一步派生过程中，和派生类一起维护一个内存数据拷贝。 虚基类就是为了解决多继承产生的二义性问题</p>
+<p>14 组合与继承有什么共同点和差异？通过组合生成的类与被组合的类之间的逻辑关系是什 么？继承呢？<br>组合和继承它们都使得已有对象成为新对象的一部分，从而达到代码复用的目的。组合 和继承其实反映了两种不同的对象关系。<br>组合反映的是“有一个”（has-s）的关系，如果类 B 中存在一个类 A 的内嵌对象，表示的 是每一个 B 类型的对象都“有一个”A 类型的对象，A 类型的对象与 B 类型的对象是部分整体 的关系。<br>继承反映的是“是一个”（is-a）的关系，在“是一个”关系中，如果类 A 是类 B 的公有基 类，那么这表示每一个 B 类型的对象都“是一个”A 类型的对象，B 类型的对象与 A 类型的对 象是特殊与一般的关系。</p>
+<p>15 基类与派生类的对象，指针或引用之间，哪些情况下可以隐含转换，哪些情况下可以显 示转换？在涉及多重继承或虚继承的情况下，在转换时会面临哪些新问题？<br>派生类指针可以隐含转换为基类指针，而基类指针要想转换为派生类指针，则转换一定 要显示地进行。因为从特殊的指针转换到一般的指针时安全的，因此允许隐含转换；<br>从一般 的指针转换到特殊的指针是不安全的，因此只能显示地转换。基类对象一般无法被显式转换 为派生类对象。在多重继承情况下，执行基类指针到派生类指针的显式转换时，有时需要将 指针所存储的地址值进行调整后才能得到新指针的值。<br>但是，如果 A 类型是 B 类型的虚拟 基类，虽然 B 类型的指针可以隐含转换为 A 类型，但是 A 类型指针却无法通过 static_case 隐含转换为 B 类型的指针。</p>
+<p>16 什么叫做多态性？在 C++种是如何实现多态的？<br><strong>多态是指同样的消息被不同类型的对象接收时导致完全不同的行为，是对类的特定成员 函数的再抽象。</strong>C++支持重载多态，强制多态，包含多态和参数多态。 在基类中声明相应的函数为 virtual 型，然后在派生类中实现该函数，这样就可以通过 基类指针调用派生类对象的函数，实现了运行时动态绑定，即多态的功能。</p>
+<p>17 什么叫抽象类？抽象类有何作用？抽象类的派生类是否一定要给出纯虚函数的实现？<br>带有纯虚函数的类是抽象类。其主要作用是通过它为一个类族建立一个公共的接口，使 他们能够更有效地发挥多态特性。抽象类声明了一个类族派生类的共同接口，而接口的完整 实现，即纯虚函数的函数体，要由派生类自己定义。抽象类派生出新的类之后，如果派生类 给出所有纯虚函数的函数实现，这个派生类就可以定义自己的对象，因而不再是抽象类；反 之，如果派生类没有给出全部纯虚函数的实现，此时的派生类仍然是一个抽象类。</p>
+<p>18 在 C++中，能否声明虚构造函数？为什么？能否声明虚析构函数？有何用途？<br>在 C++中，不能声明虚构造函数，多态是不同的对象对同一消息有不同的行为特性，虚 函数作为运行过程中多态的基础，主要是针对对象的，而构造函数是在对象产生之前运行的， 因此虚构造函数是没有意义的；<br>可以声明虚析构函数，析构函数的功能是在该类对象消亡之前进行一些必要的清理工作， 如果一个类的析构函数是虚函数，那么，由它派生而来的所有子类的析构函数也是虚函数。 析构函数设置为虚函数之后，在使用指针引用时可以动态联编，实现运行时的多态，保证使 用基类的指针就能够调用适当的析构函数针对不同的对象进行清理工作。</p>
+<p>19 什么叫做流？流的提取和插入是指什么？I/O 流在 C++中起着怎样的作用？<br>流是一种抽象，它 负责在数据的生产者和数据的消费者之间建立联系，并管理数据的流 动，一般意义下的读操作在流数据抽象中被称为（从流中）提取，写操作被称为（向流中） 插入。<br>操作系统是将键盘、屏幕、打印机和通信端口作为扩充文件来处理的，I/O 流类就是 用来与这些扩充文件进行交互，实现数据的输入与输出。</p>
+<p>20 什么叫做异常？什么叫做异常处理？<br>当一个函数在执行的过程中出现了一些不平常的情况，或运行结果无法定义的情况，使 得操作不得不被中断时，我们说出现了异常。异常通常是用 throw 关键字产生的一个对象， 用来表明出现了一些意外的情况。我们在设计程序时，就要充分考虑到各种意外情况，并给 与恰当的处理。这就是我们所说的异常处理。</p>
+<p>21 C++的异常处理机制有何优点？<br>C++的异常处理机制使得异常的引发和处理不必在同一函数中，这样底层的函数可以着 重解决具体问题，而不必过多地考虑对异常的处理。上层调用者可以在适当的位置设计对不 同类型异常的处理。</p>
+<p>22 比较函数重载和虚函数在概念和使用方式方面有什么区别？<br>    函数重载可以用于普通函数（非成员的函数）和类的成员函数，而虚函数只能用于 类的成员函数。<br>    函数重载可以用于构造函数，而虚函数不能用于构造函数。<br>    如果对成员函数进行重载，则重载的函数与被重载的函数应当都是同一类中的成员 函数，不能分属于两个不同继承层次的类。函数重载是横向的重载。虚函数是对同 一类族中的基类和派生类的同名函数的处理，即允许在派生类中对基类的成员函数 重新定义。虚函数的作用是处理纵向的同名函数。<br>    重载的函数必须具有相同的函数名，但函数的参数个数和参数类型二者中至少有一 样不同，否则在编译时无法区分它们。而虚函数则要求再同一类族中的所有虚函数 不仅函数名相同，而且要求函数类型、函数的参数个数和参数类型都全部相同，否 则就不是重定义了。也就不是虚函数了。<br>    函数重载是在程序编译阶段确定操作的对象的，属静态关联。虚函数是在程序运行 阶段确定操作的对象的，属动态关联。</p>
+<p>23 比较 class 和 struct 结构体的异同<br>不同之处：</p>
+<pre><code class="hljs">默认成员访问权限不同，struct 默认是 public，而 class 默认是 private。
+默认继承方式不同，struct 默认是 public，而 class 默认是 private。
+在定义模板参数时可以用 class 但不能用 struct。 相同之处在于：都可以包含成员函数，都可以实现继承，都可以实现多态。
+</code></pre>
+<p>24 浅拷贝和深拷贝的区别？<br>在某些情况下，类内的成员变量需要动态开辟堆内存，如果实行按位拷贝，就可能会出 现两个对象里面的成员变量指针指向同一块内存区域。当回收其中一个对象时，该对象成员 变量所指向的内存区域也将回收，会导致另一个对象存在野指针的情况。非常危险。 深拷贝和浅拷贝可以简单理解为：如果一个类拥有资源，当这个类的对象发生复制过程 的时候，资源重新分配，这个过程就是深拷贝，反之，没有重新分配资源，就是浅拷贝。</p>
+<p>25 const 和 static 作用 const 作用：<br>const:</p>
+<pre><code class="hljs">定义 const 常量，具有不可变性，保护被修饰的东西。防止意外修改，增强程序的 健壮性。
+便于类型检查，使编译器对处理内容有更多的了解。
+可以避免意义模糊的数字出现，也便于进行参数的修改。同宏定义一样，可以做到 不变则以，一变都变。
+const 定义的常量在程序运行过程中只有一份拷贝，而宏定义却又若干份拷贝。
+</code></pre>
+<p>static:</p>
+<pre><code class="hljs">作为类的静态数据成员：被类的所有对象共同拥有，在内存中只有一份拷贝。在类 内声明，在类外初始化。
+在全局变量前加上 static 关键字，该变量被定义为一个全局变量，
+特点：
+a) 变量在全局数据区分配内存
+b) 如果不显示初始化，则隐式的初始化为 0
+c) 作用域仅限于本文件内
+在局部变量前加 static 关键字，该变量被定义为静态局部变量，
+特点：
+a) 在全局数据区分配内存
+b) 如果不显示初始化，则隐式的初始化为 0
+c) 始终驻留在全局数据区，直到程序结束。作用域仅限于函数体内，当函数执行 完后作用域随之消失。
+静态函数，
+特点：
+a) 静态函数只能在本源文件中使用
+b) 在文件作用域下声明的 inline 函数默认是 static 的
+</code></pre>
+<p>26 析构函数带 virtual 和 不带 virtual 的区别<br>如果基类要被派生，则析构函数一定要带 virtual。否则，通过基类指针指向派生类对象 后，删除该指针时并不会释放派生类对象的空间。也即，不会调用派生类的析构函数。</p>
+<p>不带 virtual 的几种情况：</p>
+<pre><code class="hljs">作为非公有基类
+不作为接口使用的基类
+可以保证这个类不被 public 继承
+如果他的所有派生类的 virtual 函数都是什么都不做
+如果不需要基类指针指向派生类对象
+</code></pre>
+<p>27 重写，重载和隐藏的区别？<br>重载：在一个类中的同名函数，但参数列表不同，函数的返回值相同。<br>隐藏：派生类的函数屏蔽了与其同名的父类函数<br>重写（覆盖）：父类和子类存在相同的函数，包括返回值，参数列表均相同，父类的该 函数必须含有 virtual 关键字。</p>
+<p>28 C++中的四个默认的函数<br>    构造函数：先基类后派生类<br>    拷贝函数：对象被创建时调用<br>    调用拷贝构造函数的情况：<br>    a) 一个对象以值传递的方式传入函数体<br>    b) 一个对象以值传递的方式从函数返回<br>    c) 一个对象需要通过另外一个对象初始化<br>    析构函数：每个类只有一个析构函数，<br>    赋值函数：</p>
+<p>29 不可以被重载的运算符–五个<br>类属关系运算符、成员指针运算符“、作用域运算符、 sizeof 运算符和三目 运算符<br>. .* :: sizeof() ?:</p>
+<p>30 三种字符数组初始化的方法<br>char str[5] = {“hello”};<br>char str[6] = {‘a’,‘b’,‘c’,‘d’,‘e’,’\0’};<br>char str[] = “abcde”;</p>
+<p>31 哪些操作符必须重载为成员函数<br>必须重载：<br>= -&gt; () [] new delete</p>
+<p>32 什么是“else 摇摆问题”，举例说明<br>C++编译器总是把 else 同与它最近的 if 联系起来，因此如果没有正确放置花括号对就 会出现逻辑错误。</p>
+<p>33 函数模板和函数重载的区别与联系<br>函数重载：C++允许使用同一个函数名，不同的参数个数和参数类型来定义多个函数。 重载函数的参数个数，类型，顺序至少有一个不同。返回值可以相同，也可以不同。</p>
+<p>函数模板：是对一类同构函数的抽象定义，并不是具体的函数，函数模板的定义被编译 时不会产生任何可执行的代码。 联系： 针对不同类型的数据，但实现相同功能的函数重载可以通过函数模板来替代。</p>
+<p>34 怎样区别虚函数和纯虚函数？两者都有什么作用<br>纯虚函数是在基类中声明的虚函数，在基类中没有定义。在基类中实现纯虚函数的方法 是在函数原型后加“=0。虚函数可以实现也可以不实现。<br>定义纯虚函数是为了实现一个接口，起到了一个规范的作用。规范继承这个类的程序员 必须实现这个接口。<br>声明了纯虚函数的类为抽象类，不能实例化对象。 定义虚函数是为了允许用基类的指针来调用子类的这个函数。<br>抽象类的作用：将有关的操作作为一个接口组织在一个继承层次结构中，由他来为派生 类提供一个公共的根。派生类将具体实现在其基类中作为接口的操作。</p>
+<p>35 面向对象程序“接口与实现方法分离”，有什么作用（好处）<br>接口与实现分离技术可以只把接口暴露给用户，具体的实现细节隐藏起来，当需要改动 代码时，只要在实现部分修改后编译，用户无需再编译自己的项目。</p>
+<p>36 列出所有与字符串处理有关的头文件<br>string.h 是 C 语言中字符串操作函数的头文件<br>cstring 是 c++对 C 语言中的 strcpy 之类的函数申明，包含 cstring 之后，就可以在程序 中使用 C 语言风格的 strcpy 之类的函数。<br>string 是 c++语言中 string 类模板的申明<br>CString 是 MFC 中定义的字符串类，MFC 中很多类及函数都是以 CString 为参数的</p>
+<p>37 C++中显示类型转换<br>    static_cast：最常用的类型转换，提供基本数据类型之间的转换操作。<br>    const_cast：可以把 const 类型的指针转换为非 const 类型的指针。<br>    reinterpret_cast：解释的意思，主要用于不相关类型之间的转换。目标和原始值之 间至少有相同的位数，我们可以将转换之后的值再转换回去，而不像其它 3 种类型 可能会导致精度丢失<br>    dynamic_cast：运行时检查该转换是否类型安全，但只有在多态类型时合法，主要 用于类层次间的上行和下行转换，还可以用于类之间的交叉转换。在进行类层次间 的上行转换时和 static_cast 效果一样，进行下行转换时，具有类型检查的功能，比 static_cast 更安全。</p>
+<p>38 delete 和 delete [] 的区别？<br>delete ptr 代表用来释放内存，且只用来释放 ptr 指向的内存。<br>delete[] rg 用来释放 rg 指向的内存！！还逐一调用数组中每个对象的析构函数 对于像 int/char/long/int*/struct 等等简单数据类型，由于对象没有 destructor，所以用 delete 和 delete [] 是一样的！但是如果是 C++对象数组就不同了！</p>
+<p>39 存储类别说明符可划分为两类。<br>静态存储类别（static，extern）和自动存储类别（auto， register）。这样的变量在程序执行进入到定义它们的程序块时创建，在程序块激活时存在， 在程序块退出时销毁。</p>
+<p>40 什么是运算符重载，它如何增强 C++的扩展性？<br>运算符重载是对已有的运算符赋予多重含义，使得同一个运算符作用于不同类型的数据 时导致不同的行为。 运算符重载的本质是函数重载，可以改变现有运算符的操作方式，以适用于类类型，为 类的用户提供了一个直接的接口，使得用户程序所用的语言是面向问题的，而不是面向机器的，增强了 C++的扩展性。</p>
+<p>41 为什么说”继承是 C++面向对象的主要特征之一”?请简要说明.？<br>继承是一种联结类的层次模型，层次结构的上层是最具有通用性的，而下层的部分，即 后代具有特殊性。类可以从他的祖先那里继承方法和成员变量，也可以增加新的方法是适用 于特殊的需要。如果没有继承，类就缺失了一块层次结构，代码重用和数据共享就贯彻不到 底，有了继承，就会有抽象编程中的多态问题，只有从机制内部真正解决了多态表现问题， 对象的数据封装，信息隐藏，代码重用等招式才能淋漓尽致的发挥出来。才称得上真正的面 向对象编程。</p>
+<p>42 作用域辨析有哪些？<br>    类作用域： 在类的作用域内，类的成员可以被类的所有成员函数直接访问，在类的作用域之外， public 类成员通过对象的句柄之一而引用。句柄可以是对象名称，对象的引用，对象的指针。 对象，引用或指针指定了客户可访问的接口。<br>    全局名字空间作用域： 声明与任何函数或者类之外的标识符具有全局名字空间作用域，这种标识符对于从其声 明处开始直到文件结尾处为止出现的所有函数都是已知的，即可访问的。位于函数之外的全局变量。函数定义和函数原型都属于该作用域。<br>    函数作用域： 标签是唯一具有函数作用域的标识符，标签可以在函数中的任何地方使用，但是不能在 函数体外被引用。<br>    局部作用域： 在一个语句块中声明的作用域，开始于标识符的声明出，结束于标识符声明处所在语句 块的结束右花括号处。局部变量具有局部作用域，函数形参也是函数的局部作用域。当语句 块是嵌套的，并且外层语句块的一个标识符和内层语句块的一个标识符具有相同的名字时， 外层的标识符处于隐藏状态，直到内存的语句块执行结束为止。<br>    函数原型作用域： 函数原型形参列表中的标识符，在一个函数原型中，一个特定的标识符只能使用一次。</p>
+<p>43.STL 是什么？组成部分和区别。<br>STL 是 c++提供的标准模板库。<br>STL 的主要组成部分为：容器、迭代器、算法、函数对象和适配器。其中算法处于核心 地位，迭代器如同算法和容器之间的桥梁，算法通过迭代器从容器中获取元素，然后将获取 的元素传递给特定的函数对象的操作，最后将处理后的结果存储到容器中。</p>
+<p>44 如何声明和使用虚函数。说明它在多态性中的作用和意义。<br>声明：在基类中声明成员函数时在前面加上关键字 virtual 。<br>使用虚函数：在基类中将成员函数声明为虚函数，这样在派生类中重写该方法后，在使 用基类的指针或引用指向派生类对象时，就可以通过这个基类指针或引用访问到派生类的方法。</p>
+<p>C++中的多态可分为四类：重载多态、强制多态、包含多态和参数多态，其中包含多态 是研究类族中定义于不同类中的同名函数的多态行为，主要通过虚函数来实现。多态使得接 口与实现得到分离，要利用统一接口实现运行时多态一般需要动态绑定，而虚函数是动态绑 定的基础，就使得虚函数在多态中很重要。</p>
+<p>多态指同样的消息被不同类型的对象接收时导致不同的行为。 虚函数机理：当编译器看到 fn 的虚函数标志时，会记下，等遇到这个虚函数的调用时，将 该捆绑操作滞后到运行中，以实际的对象来捆绑其对应的成员函数操作，编译器在捆绑操作 b.fn()处避开函数调用，只作一个指向实际对象成员函数的间接访问，每个实际的对象都需 额外占有一个指针空间，以指向类中的虚函数表。</p>
+<p>44.什么是逻辑错误？什么是语法错误？请举例说明。<br>逻辑错误：由于程序设计人员设计的算法有错或编写的程序有错，此时程序一般能够正 常运行，但是通知给系统的指令与解题的原意不相同，即出现了逻辑上的混乱。 例如：int a[5] = { 1 , 2 , 3 , 4 , 5} ; for( int i = 0 ; i &lt;= 0 ; i ++ ) cout &lt;&lt; a[i] &lt;&lt; endl ; //发生数组越界</p>
+<p>语法错误：违背了 C++语言的规定，不能生成可执行文件，主要是语句的结构或拼写中 存在的错误。 例如：for( int i = 0 , i &lt; 10 , i ++) { } //应该用“;</p>
+<p>45 编写语句说明枚举类型是如何定义和使用的。<br>枚举类型的声明形式如下 enum 枚举类型名 { 变量值列表 } ;</p>
+<p>例如： enum weekday{ sun , mon , tue , wed , thu , fri , sta } ; 变量定义：enum weekday a , b , c = tue ; //也可以省略 enum</p>
+<pre><code class="hljs">枚举元素具有默认值，他们依次是：0 , 1 , 2 , … , 例子中：sun 的值为 0 ， mon 的值 为 1，tue 的值为 2，… ,sta 的值为 6 。
+枚举元素按常量处理，不能进行赋值。
+整数值也不能赋给枚举变量，如确实需要可进行强制类型转换。
+枚举变量可以进行关系运算。
+</code></pre>
+<p>46 ADT是什么？简述你对“数据抽象”和“信息隐藏”的认识。<br>C++内部的数据类型包括基本类型和复合类型（数组、字符串、指针和结构），有表示 范围，只是用可以接受的方式表示实际概念。确定了一个类型就确定了计算机存储给类型所 需要的容量，确定了其表示范围，也确定了对该类型可以进行的操作。</p>
+<p>抽象数据类型（Abstract Data Type)，简称 ADT，是指一个数学模型以及定义在该模型 上的一组操作。 通常以以下格式定义： ADT 抽象数据类型名{ 数据对象：&lt;数据对象的定义&gt; 数据关系：&lt;数据关系的定义&gt; 基本操作：&lt;基本操作的定义&gt; }</p>
+<p>数据抽象：对具体事物描述的一个概括。通过数据抽象可以将数据类型的定义和它的实 现分开，使得只研究和使用它的结构而不用考虑它的实现细节成为可能。C++中的类就是一 种数据抽象，类是具有相同属性和服务的一组对象的集合。</p>
+<p>信息隐藏：C++中的封装就是信息隐藏的一种，即尽可能的隐藏对象的内部细节，对外 形成一个边界，只保留有限的对外接口使之与外部反生关系。</p>
+<p>47 简述你对“面向对象”和“面向过程”编程思想的理解和认识。<br>“面向过程”是一种以事件为中心的编程思想，就是分析出解决问题所需要的步骤，然后 用函数把这些步骤一步一步实现，使用的时候一个一个依次调用就可以了。过程化编程强调 功能，以过程模块为中心，分层逐步展开设计。通常采用结构化程序设计，基本思路为：自 顶向下、逐步求精。</p>
+<p>“面向对象”的编程思想就是把你需要解决的问题中的所有具体的东西，都看成一个个具 有属性和行为的对象，然后把所有具有相同性质的对象抽象成类，那些与问题无关的对象则 忽略。对象化编程强调分离抽象层次，以便让程序员分工，关心不同抽象层次中的细节，而 不用去关心不同抽象层次的联系，数据安全而隐蔽，不同抽象层次的职责分明。</p>
+<p>50 写出递归函数定义以及相应的优缺点<br>递归函数是直接或间接地（通过另一个函数）调用自己。</p>
+<p>优点：<br>结构清晰，可读性强，使程序易于理解和调试。</p>
+<p>缺点</p>
+<pre><code class="hljs">效率较低。递归是有时间和空间消耗的。另外，递归有可能很多计算都是重复的，从而给性能带来很大的负面影响。因为递归的本质是把一个问题分解成连个或者多个小问题。如果多个小问题存在相互重叠的部分，那么就存在重复的计算。
+
+可能导致调用栈溢出。每一次函数调用在内存栈中分配空间，而每个进程的栈的容量是有限的。当递归调用的层级太多时，就会超出栈的容量，从而导致栈溢出。
+</code></pre>
+<p>51 写出包含输入输出的标准库<br>    <fstream><br>    <iomanip><br>    <ios><br>    <iosfwd><br>    <iostream><br>    <ostream><br>    <istream><br>    <sstream><br>    <streambuf></streambuf></sstream></istream></ostream></iostream></iosfwd></ios></iomanip></fstream></p>
+<p>52 怎样区别虚函数和纯虚函数？两者都有什么作用<br>虛函數介紹</p>
+<pre><code class="hljs">虚函数，在类成员方法的声明（不是定义）语句前加“virtual”, 如 virtual void func()
+纯虚函数，在虚函数后加“=0”，如 virtual void func()=0
+对于虚函数，子类可以（也可以不）重新定义基类的虚函数，该行为称之为复写Override。
+对于纯虚函数，子类必须提供纯虚函数的个性化实现。
+</code></pre>
+<p>在派生子类中对虚函数和纯虚函数的个性化实现，都体现了“多态”特性。但区别是：</p>
+<pre><code class="hljs">子类如果不提供虚函数的实现，将会自动调用基类的缺省虚函数实现，作为备选方案；
+子类如果不提供纯虚函数的实现，编译将会失败。尽管在基类中可以给出纯虚函数的实现，但无法通过指向子类对象的基类类型指针来调用该纯虚函数，也即不能作为子类相应纯虚函数的备选方案。（纯虚函数在基类中的实现跟多态性无关，它只是提供了一种语法上的便利，在变化多端的应用场景中留有后路。）
+</code></pre>
+<p>虚函数：当使用类的指针调用成员函数时，普通函数由指针类型决定，而虚函数由指针指向的实际类型决定。所以虚函数的调用时由指针所指向内存块的具体类型决定的。</p>
+<p>纯虚函数：纯虚函数是在基类中声明的虚函数，它要求任何派生类都要定义自己的实现方法，以实现多态性。实现了纯虚函数的子类，该纯虚函数在子类中就变成了虚函数。</p>
+<p>定义纯虚函数是为了实现一个接口，用来规范派生类的行为，也即规范继承这个类的程序员必须实现这个函数。派生类仅仅只是继承函数的接口。纯虚函数的意义在于，让所有的类对象（主要是派生类对象）都可以执行纯虚函数的动作，但基类无法为纯虚函数提供一个合理的缺省实现。所以类纯虚函数的声明就是在告诉子类的设计者，“你必须提供一个纯虚函数的实现，但我不知道你会怎样实现它”。</p>
+<p>含有纯虚函数的类称之为抽象类，它不能生成对象（创建实例），只能创建它的派生类的实例。抽象类是一种特殊的类，它是为了抽象和设计的目的为建立的，它处于继承层次结构的较上层。抽象类的主要作用是将有关的操作作为结果接口组织在一个继承层次结构中，由它来为派生类提供一个公共的根，派生类将具体实现在其基类中作为接口的操作。</p>
+<p>抽象类只能作为基类来使用，其纯虚函数的实现由派生类给出。如果派生类中没有重新定义纯虚函数，而只是继承基类的纯虚函数，则这个派生类仍然还是一个抽象类。如果派生类中给出了基类纯虚函数的实现，则该派生类就不再是抽象类了，它是一个可以建立对象的具体的类。</p>
+<hr>
+<p>C++面试常见问题之美(转载)<br><a target="_blank" rel="noopener" href="https://blog.51cto.com/u_15273495/2914522">https://blog.51cto.com/u_15273495/2914522</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/project/categories/C/" class="category-chain-item">C++</a>
+  
+  
+    <span>></span>
+    
+  <a href="/project/categories/C/%E9%9D%A2%E8%AF%95/" class="category-chain-item">面试</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>C++面试常见问题之美（转载）</div>
+      <div>https://wlpswmt.github.io/project/2022/09/26/C-面试常见问题之美/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Sivan Zhang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月26日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/project/2022/12/26/%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/" title="回调函数">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">回调函数</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/project/2022/06/26/git%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93/" title="Git远程仓库">
+                        <span class="hidden-mobile">Git远程仓库</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/project/js/events.js" ></script>
+<script  src="/project/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/project/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/project/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/project/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/project/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"/project/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":250,"height":400},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+<!--������ʾ����-->
+<script type="text/javascript" src="/js/click_show_text.js"></script>
+<!--�������Ц����-->
+<script type="text/javascript" src="/js/FunnyTitle.js"></script>
+<!--��̬��������-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.9' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+

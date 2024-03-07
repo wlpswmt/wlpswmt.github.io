@@ -1,0 +1,765 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/project/img/cutegirl.png">
+  <link rel="icon" href="/project/img/cutegirl.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Sivan Zhang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="本基础知识来自博主学校课堂笔记，由于课程尚未结束，目前知识点比较零散，等课程结束后，将重新排版，作为Python基础教程，以供参考。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PythonBaseKnowledge(持续更新中)">
+<meta property="og:url" content="https://wlpswmt.github.io/project/2023/03/01/PythonBaseKnowledge/index.html">
+<meta property="og:site_name" content="Silence">
+<meta property="og:description" content="本基础知识来自博主学校课堂笔记，由于课程尚未结束，目前知识点比较零散，等课程结束后，将重新排版，作为Python基础教程，以供参考。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wlpswmt.github.io/project/img/%E5%85%A5%E9%97%A8.jpeg">
+<meta property="article:published_time" content="2023-03-01T08:32:33.000Z">
+<meta property="article:modified_time" content="2023-03-09T06:37:56.194Z">
+<meta property="article:author" content="Sivan Zhang">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://wlpswmt.github.io/project/img/%E5%85%A5%E9%97%A8.jpeg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>PythonBaseKnowledge(持续更新中) - Silence</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/project/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/project/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/project/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"wlpswmt.github.io","root":"/project/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/project/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/project/js/utils.js" ></script>
+  <script  src="/project/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+<link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 80vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/project/">
+      <strong>幽客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/project/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/project/img/python.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="PythonBaseKnowledge(持续更新中)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Sivan Zhang
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-01 16:32" pubdate>
+          2023年3月1日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          63 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">PythonBaseKnowledge(持续更新中)</h1>
+            
+              <p class="note note-primary">
+                
+                  
+                    本文最后更新于：1 年前
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p>本基础知识来自博主学校课堂笔记，由于课程尚未结束，目前知识点比较零散，等课程结束后，将重新排版，作为Python基础教程，以供参考。</p>
+<span id="more"></span>
+
+
+
+
+
+<h2 id="Python变量和基础数据类型"><a href="#Python变量和基础数据类型" class="headerlink" title="Python变量和基础数据类型"></a>Python变量和基础数据类型</h2><h3 id="多重赋值"><a href="#多重赋值" class="headerlink" title="多重赋值"></a>多重赋值</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">x,y,z = <span class="hljs-number">10</span>,<span class="hljs-string">&quot;Python_numpy&quot;</span>,<span class="hljs-number">100.0</span><br>a=b=c=<span class="hljs-number">1</span><br><span class="hljs-comment">#打印这三个变量</span><br><span class="hljs-built_in">print</span>(x,y,z)<br></code></pre></td></tr></table></figure>
+
+<h4 id="赋值背后的操作"><a href="#赋值背后的操作" class="headerlink" title="赋值背后的操作"></a>赋值背后的操作</h4><p>赋值背后发生了什么呢？在Python中，所有变量都视为对象。为了节省内存，Python会尽可能的使用浅复制。如果需要深复制，请使用copy库中的deepcopy函数（在<strong>库</strong>的章节中会提到）</p>
+<p>下面简要介绍Python中的基础数据类型，<strong>关于某种具体数据类型的使用心得，请多多查阅资料，熟能生巧</strong></p>
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><h4 id="字符串的创建"><a href="#字符串的创建" class="headerlink" title="字符串的创建"></a>字符串的创建</h4><p>在Python中，字符串可以由<strong>单引号、双引号或者三引号构成</strong>，现举例说明</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&quot;let it go!&quot;</span> <span class="hljs-comment">#最简单的</span><br><span class="hljs-string">&#x27;let it go!&#x27;</span> <span class="hljs-comment">#最简单的</span><br><span class="hljs-string">&quot;let&#x27;s go!&quot;</span> <span class="hljs-comment">#字符串内部有单引号，外部用双引号，反之也成立</span><br><span class="hljs-string">&#x27;&#x27;&#x27; he says:&quot;let&#x27;s go!&quot; &#x27;&#x27;&#x27;</span> <span class="hljs-comment"># 三引号解决了内部使用单引号和双引号的字符串构造问题</span><br></code></pre></td></tr></table></figure>
+
+<p>三引号字符串也可以用于创建函数的注释，该注释会检查函数的形式参数和注释中的写法(:param xxx)是否匹配。比如神经网络中我设计了下面这个函数，为了解释清楚，我写了如下注释</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, feat: Tensor,</span><br><span class="hljs-params">            pos: <span class="hljs-type">Optional</span>[Tensor] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">            pos_indexes: <span class="hljs-type">Optional</span>[Tensor] = <span class="hljs-literal">None</span></span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    :param feat: image feature [W,2HN,C]</span><br><span class="hljs-string">    :param pos: pos encoding [2W-1,HN,C]</span><br><span class="hljs-string">    :param pos_indexes: indexes to slice pos encoding [W,W]</span><br><span class="hljs-string">    :return: updated image feature</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    feat2 = self.norm1(feat)<br><br>    feat2, attn_weight, _ = self.self_attn(query=feat2, key=feat2, value=feat2, pos_enc=pos,<br>                                           pos_indexes=pos_indexes)<br><br>    feat = feat + feat2<br><br>    <span class="hljs-keyword">return</span> feat<br></code></pre></td></tr></table></figure>
+
+<p>Python字符串和C++一样是支持编写类似\n \t等字符的，单个的\不会作为字符出现，若有要求（一般是文件路径字符串），请以 <code>\\</code>的形式进行转义，或者在字符串前面加一个r表示（raw，生的，没加工的-&gt;原始字符串）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">path=<span class="hljs-string">&quot;C:\\Users\\lenovo\\logs&quot;</span><br><span class="hljs-built_in">print</span>(path)  <span class="hljs-comment">#打印结果为C:\Users\lenovo\logs</span><br>path=<span class="hljs-string">r&quot;C:\Users\lenovo\logs&quot;</span><br><span class="hljs-built_in">print</span>(path)<br></code></pre></td></tr></table></figure>
+
+
+
+<p>由于篇幅限制，关于字符串创建的其他知识点同学们可以自行进一步了解，到此为止你应该会创建字符串了</p>
+<h4 id="字符串的运算和对象方法"><a href="#字符串的运算和对象方法" class="headerlink" title="字符串的运算和对象方法"></a>字符串的运算和对象方法</h4><h5 id="查看字符串长度"><a href="#查看字符串长度" class="headerlink" title="查看字符串长度"></a>查看字符串长度</h5><p>使用Python的内置函数len()。所谓内置函数就是Python已经封装好的一些函数，他们会在解释器启动的时候就载入内存，当然有些也需要import进来，稍后会讲</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">a=<span class="hljs-string">&quot;I line Python&quot;</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(a))  <span class="hljs-comment">#结果为13 ，其中有两个空格</span><br>b=<span class="hljs-string">&quot;Python是人工智能的首先语言！&quot;</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(b))  <span class="hljs-comment">#结果为17，表示元素个数，一个汉字或一个字符都是元素之一</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(<span class="hljs-string">&quot;&quot;</span>)) <span class="hljs-comment">#结果为0，表示空字符</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="字符串的拼接、重复"><a href="#字符串的拼接、重复" class="headerlink" title="字符串的拼接、重复"></a>字符串的拼接、重复</h5><p>字符串对象已经重载了“+”和“*”运算符，我们可以直接使用+运算来进行拼接，使用 <code>*</code>来倍增字符串</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#拼接两个字符串，中间用空格隔开</span><br><span class="hljs-string">&quot;hellow&quot;</span>+<span class="hljs-string">&quot; &quot;</span>+<span class="hljs-string">&quot;world!&quot;</span><br><span class="hljs-comment">#对同一字符拼接多次</span><br><span class="hljs-number">3</span>*<span class="hljs-string">&quot;ok&quot;</span><br><span class="hljs-comment">#拼接后的字符串作为另一个字符串</span><br><span class="hljs-built_in">len</span>(<span class="hljs-string">&#x27;Python&#x27;</span>+<span class="hljs-string">&quot;3.7&quot;</span>)<br><span class="hljs-comment">#重复累加字符串，也可用乘法，如</span><br><span class="hljs-built_in">print</span>(<span class="hljs-number">3</span>*<span class="hljs-string">&quot;ok&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;~&#x27;</span>*<span class="hljs-number">20</span>)<br></code></pre></td></tr></table></figure>
+
+<h5 id="字符串的分裂和其他批量操作"><a href="#字符串的分裂和其他批量操作" class="headerlink" title="字符串的分裂和其他批量操作"></a>字符串的分裂和其他批量操作</h5><p>见下列代码，同学们<strong>一定要自行完成所有代码实验！</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python">str1=<span class="hljs-string">&quot;  I like Python  &quot;</span><br><span class="hljs-comment">#删除末尾空格</span><br>str1.rstrip()  <span class="hljs-comment">#结果为：&#x27;  I like Python&#x27;</span><br><span class="hljs-comment">#删除开头空格</span><br>str1.lstrip()  <span class="hljs-comment">#结果为：&#x27;I like Python  &#x27;</span><br><span class="hljs-comment">#删除首尾空格</span><br>str1.strip()  <span class="hljs-comment">#结果为：&#x27;I like Python&#x27;</span><br>str1.lower()  <span class="hljs-comment">#把字符串str1中的每个字符改为小写</span><br><span class="hljs-comment">#先把删除首尾空格后的字符串赋给另一个变量</span><br>str2=str1.strip()<br><span class="hljs-comment">#把字符串改为小写</span><br><span class="hljs-built_in">print</span>(str2.lower())  <span class="hljs-comment">#结果：&#x27;i like python&#x27;</span><br><span class="hljs-comment">#把字符串改为大写</span><br><span class="hljs-built_in">print</span>(str2.upper())  <span class="hljs-comment">#结果：&#x27;I LIKE PYTHON&#x27;</span><br><span class="hljs-comment">#每个单词的首字母，变为大写</span><br><span class="hljs-built_in">print</span>(str2.title()) <span class="hljs-comment">#结果：&#x27;I Like Python&#x27;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>分裂字符串是日常中<strong>最最最常用的一个函数</strong>，该函数会返回一个列表（暂且理解成STL中的vector（不过列表是可以储存不同类型元素的））</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">str2.split()  <span class="hljs-comment">#split中没有参数，表示按空格（缺省方式）分割</span><br>str3=<span class="hljs-string">&quot;python|java|keras|pytorch|tensorflow&quot;</span><br>str3.split(<span class="hljs-string">&#x27;|&#x27;</span>)    <span class="hljs-comment">#用竖线分割</span><br></code></pre></td></tr></table></figure>
+
+<p>返回结果如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">[<span class="hljs-string">&#x27;I&#x27;</span>, <span class="hljs-string">&#x27;like&#x27;</span>, <span class="hljs-string">&#x27;Python&#x27;</span>]<br>[<span class="hljs-string">&#x27;python&#x27;</span>, <span class="hljs-string">&#x27;java&#x27;</span>, <span class="hljs-string">&#x27;keras&#x27;</span>, <span class="hljs-string">&#x27;pytorch&#x27;</span>, <span class="hljs-string">&#x27;tensorflow&#x27;</span>]<br></code></pre></td></tr></table></figure>
+
+<p><strong>延申</strong>：对于如何分割<strong>不带标点</strong>中文句子，请大家查阅资料，提示，使用第三方库jieba</p>
+<h3 id="数字数据类型、Python的输入输出与字符串的关系"><a href="#数字数据类型、Python的输入输出与字符串的关系" class="headerlink" title="数字数据类型、Python的输入输出与字符串的关系"></a>数字数据类型、Python的输入输出与字符串的关系</h3><p>Python中的数字数据类型和其他编程语言极其相似，一些过于细节的东西不再赘述</p>
+<p>在Python中，输入和输出函数是input和print函数，但是要注意，两个函数的操作都和字符串密切相关。<br><strong>input函数的输入结果一律按照字符串处理</strong>，这一点和强类型的C++有很大的区别，所以要想获得真正的值，我们必须借助一些函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python">a = <span class="hljs-built_in">input</span>(<span class="hljs-string">&quot;请输入&quot;</span>) <span class="hljs-comment">#input函数的参数是输入提示，这时候无论输入什么a都按照字符串储存</span><br>a = <span class="hljs-built_in">eval</span>(<span class="hljs-built_in">input</span>(<span class="hljs-string">&quot;请输入&quot;</span>)) <span class="hljs-comment">#eval函数会自动的把数值的字符串形式转换为真正的数值，但是eval函数有风险，最好指定强转的类型</span><br><span class="hljs-comment">#输入两个整数，求它们的和</span><br>a1=<span class="hljs-built_in">input</span>(<span class="hljs-string">&quot;输入第一个整数:&quot;</span>)<br>a2=<span class="hljs-built_in">input</span>(<span class="hljs-string">&quot;输入第二个整数:&quot;</span>)<br><span class="hljs-comment">#因input函数，返回结果是字符串，不是数字，故需要把字符串转换为数字</span><br>i1=<span class="hljs-built_in">int</span>(a1)<br>i2=<span class="hljs-built_in">int</span>(a2)<br><span class="hljs-comment">#计算它们的和</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;输入两个数字的和:&quot;</span>,i1+i2)<br></code></pre></td></tr></table></figure>
+
+<p>输出函数print，其使用方法如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">print</span>(value, ..., sep=<span class="hljs-string">&#x27; &#x27;</span>, end=<span class="hljs-string">&#x27;\n&#x27;</span>, file=sys.stdout, flush=<span class="hljs-literal">False</span>)  ```<br></code></pre></td></tr></table></figure>
+
+<p>其中</p>
+<ul>
+<li><p>value: 打印的值，可多个</p>
+</li>
+<li><p>file: 输出流，默认是 sys.stdout</p>
+</li>
+<li><p>sep: 多个值之间的分隔符</p>
+</li>
+<li><p>end: 结束符，默认是换行符 \n</p>
+</li>
+<li><p>flush: 是否强制刷新到输出流，默认否<br>使用过程中一般有时候选择不换行输出，此时end传入’’即可<br>对于更加细致的格式化输出，请参考菜鸟教程</p>
+<h4 id="数字运算"><a href="#数字运算" class="headerlink" title="数字运算"></a>数字运算</h4><p>Python中的数字运算大体和其他编程语言类似，但是有几个特殊的运算符需要注意</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-number">3</span>/<span class="hljs-number">2</span> <span class="hljs-comment">#1.5，和C++不一样</span><br><span class="hljs-number">20</span>**<span class="hljs-number">3</span> <span class="hljs-comment">#8000，**表示计算次幂</span><br><span class="hljs-number">9</span>//<span class="hljs-number">2</span> <span class="hljs-comment">#4，整除</span><br>a=(<span class="hljs-number">3</span>&lt;<span class="hljs-number">4</span>) <span class="hljs-comment">#a直接为布尔类型，True</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="强制类型转化"><a href="#强制类型转化" class="headerlink" title="强制类型转化"></a>强制类型转化</h4><p>在input函数介绍的时候我们就初步接触到了强制类型转换，那么具体都有啥？<br>请大家完成下面的实验</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&quot;Python &quot;</span>+<span class="hljs-built_in">str</span>(<span class="hljs-number">3</span>)  <span class="hljs-comment">#使用str函数把数字3转换为字符</span><br><br><span class="hljs-comment"># 整数转换为浮点数</span><br><span class="hljs-comment">#显式转换</span><br><span class="hljs-built_in">float</span>(<span class="hljs-number">10</span>)  <span class="hljs-comment">#结果： 10.0</span><br><span class="hljs-comment">#隐式转换，Python自动先将10转换为10.0，然后再与0.1相加</span><br><span class="hljs-number">10</span>+<span class="hljs-number">0.1</span>    <span class="hljs-comment">#结果：10.1</span><br><span class="hljs-comment"># 浮点数转换为整数</span><br><span class="hljs-built_in">int</span>(<span class="hljs-number">4.52</span>)   <span class="hljs-comment">#结果：4</span><br><span class="hljs-built_in">int</span>(-<span class="hljs-number">10.89</span>) <span class="hljs-comment">#结果：-10</span><br><br><span class="hljs-comment">#使用四舍五入规则</span><br><span class="hljs-built_in">round</span>(<span class="hljs-number">7.7</span>)  <span class="hljs-comment">#结果：8</span><br><span class="hljs-built_in">round</span>(<span class="hljs-number">7.4</span>)  <span class="hljs-comment">#结果：7</span><br><span class="hljs-comment">#round（x）中x为.5时，取x最接近的偶数</span><br><span class="hljs-built_in">round</span>(<span class="hljs-number">6.5</span>)  <span class="hljs-comment">#结果：6</span><br><span class="hljs-built_in">round</span>(-<span class="hljs-number">9.5</span>) <span class="hljs-comment">#结果：-10</span><br><br><span class="hljs-comment">#把字符串转换为数字</span><br><span class="hljs-built_in">int</span>(<span class="hljs-string">&#x27;3&#x27;</span>)  <span class="hljs-comment">#结果：3</span><br><span class="hljs-built_in">float</span>(<span class="hljs-string">&quot;10.35&quot;</span>) <span class="hljs-comment">#结果：10.35</span><br><span class="hljs-built_in">float</span>(<span class="hljs-string">&quot;-9.8&quot;</span>)  <span class="hljs-comment">#结果：-9.8</span><br><span class="hljs-string">&quot;Python &quot;</span>+<span class="hljs-built_in">str</span>(<span class="hljs-number">3</span>)  <span class="hljs-comment">#使用str函数把数字3转换为字符</span><br><br><span class="hljs-comment"># 整数转换为浮点数</span><br><span class="hljs-comment">#显式转换</span><br><span class="hljs-built_in">float</span>(<span class="hljs-number">10</span>)  <span class="hljs-comment">#结果： 10.0</span><br><span class="hljs-comment">#隐式转换，Python自动先将10转换为10.0，然后再与0.1相加</span><br><span class="hljs-number">10</span>+<span class="hljs-number">0.1</span>    <span class="hljs-comment">#结果：10.1</span><br><span class="hljs-comment"># 浮点数转换为整数</span><br><span class="hljs-built_in">int</span>(<span class="hljs-number">4.52</span>)   <span class="hljs-comment">#结果：4</span><br><span class="hljs-built_in">int</span>(-<span class="hljs-number">10.89</span>) <span class="hljs-comment">#结果：-10</span><br><br><span class="hljs-comment">#使用四舍五入规则</span><br><span class="hljs-built_in">round</span>(<span class="hljs-number">7.7</span>)  <span class="hljs-comment">#结果：8</span><br><span class="hljs-built_in">round</span>(<span class="hljs-number">7.4</span>)  <span class="hljs-comment">#结果：7</span><br><span class="hljs-comment">#round（x）中x为.5时，取x最接近的偶数</span><br><span class="hljs-built_in">round</span>(<span class="hljs-number">6.5</span>)  <span class="hljs-comment">#结果：6</span><br><span class="hljs-built_in">round</span>(-<span class="hljs-number">9.5</span>) <span class="hljs-comment">#结果：-10</span><br><br><span class="hljs-comment">#把字符串转换为数字</span><br><span class="hljs-built_in">int</span>(<span class="hljs-string">&#x27;3&#x27;</span>)  <span class="hljs-comment">#结果：3</span><br><span class="hljs-built_in">float</span>(<span class="hljs-string">&quot;10.35&quot;</span>) <span class="hljs-comment">#结果：10.35</span><br><span class="hljs-built_in">float</span>(<span class="hljs-string">&quot;-9.8&quot;</span>)  <span class="hljs-comment">#结果：-9.8</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#对二进制进行处理和存储</span><br><span class="hljs-built_in">bytes</span>序列<br>a = <span class="hljs-string">b&quot;HelloWolrd&quot;</span> <span class="hljs-comment">#可以通过网络串口进行传输</span><br><span class="hljs-built_in">bytearray</span>序列<br>a = <span class="hljs-built_in">bytearray</span>(<span class="hljs-string">b&quot;HelloWorld&quot;</span>)<br><span class="hljs-comment">#元组</span><br>集合的创建<br>a = &#123;<span class="hljs-number">1</span>,(<span class="hljs-number">2</span>,<span class="hljs-number">4</span>),<span class="hljs-string">b&quot;HelloWorld&quot;</span>&#125;<br><span class="hljs-built_in">print</span>(a) <br><span class="hljs-comment">#集合 内部元素需要可哈希 有限 不能重复</span><br><span class="hljs-comment">#集合可以进行修改</span><br>a.add(<span class="hljs-number">3</span>)<br><span class="hljs-built_in">print</span>(a) <span class="hljs-comment">#输出完会增加3这一元素</span><br><span class="hljs-comment">#集合是不可以通过索引进行访问的 但可以借助内部接口函数来进行删除</span><br><span class="hljs-comment">#如何想要集合作为字典的键值 可以将其改为frozenset 其特性为可哈希的</span><br><span class="hljs-comment">#除去列表中重复的元素</span><br><span class="hljs-comment">#只需要将他转为set 再转换为list 就可以去重了</span><br>a = [<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">3</span>]<br><span class="hljs-built_in">list</span>(<span class="hljs-built_in">set</span>(a))<br><br><span class="hljs-comment">#字典 是可以更改 因为可以将其清空</span><br><span class="hljs-comment">#a[key] 可以访问对应的键值  注意key可以任意可哈希的值或数据流</span><br><span class="hljs-comment">#可以使用dict来书写配置文件 常用于构建神经网络中</span><br><span class="hljs-keyword">del</span> a[<span class="hljs-string">&quot;张三&quot;</span>] <span class="hljs-comment">#可以用来删除字典当中的对应键值对</span><br><br><br><span class="hljs-built_in">map</span> view 类型  生成一个视图类型<br><br></code></pre></td></tr></table></figure>
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/project/tags/Python/">#Python</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>PythonBaseKnowledge(持续更新中)</div>
+      <div>https://wlpswmt.github.io/project/2023/03/01/PythonBaseKnowledge/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Sivan Zhang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/project/js/events.js" ></script>
+<script  src="/project/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/project/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/project/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/project/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/project/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"/project/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":250,"height":400},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
+<!--������ʾ����-->
+<script type="text/javascript" src="/js/click_show_text.js"></script>
+<!--�������Ц����-->
+<script type="text/javascript" src="/js/FunnyTitle.js"></script>
+<!--��̬��������-->
+<script type="text/javascript"
+color="220,220,220" opacity='0.9' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
+</script>
+
